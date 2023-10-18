@@ -1,0 +1,16 @@
+{
+  "createAnAccount" : "Create an account",
+  "name" : "First Name",
+  "lastName" : "Last Name",
+  "email" : "Email Address",
+  "password" : "Password",
+  "warnText" : "An account with that email exists already!",
+  "createAccountBtn" : "Create an Account",
+  "agreeTerms" : "I agree to the Terms of Service and Privacy Policy",
+  "alreadyMember" : "Already a member?",
+  "signIn" : "Sign in",
+  "googleLogIn" : "Log in with Google",
+  "facebookLogIn": "Log in with Facebook",
+  "passwordPlaceholder" : "8+ characters",
+  "or" : "or"
+}

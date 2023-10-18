@@ -1,0 +1,20 @@
+.mapViewContainer{
+
+    border-radius: 9px;
+    background-color: white;
+}
+.mapViewStyles{
+    height: 64px;
+    background-image: url("../../../styles/images/example-map.png");
+    background-repeat: round;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mapViewBtn{
+    background:linear-gradient(270deg, #FF0000 0%, #FF3A3A 100%);
+    border-radius: 5px;
+    width: fit-content;
+    padding: 5px 15px;
+    color: white;
+}

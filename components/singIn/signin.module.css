@@ -1,0 +1,103 @@
+.signIn{
+    font-size: 22px;
+    font-weight: 900;
+}
+.emailAndPasswordDir{
+    direction: ltr!important;
+}
+.inputStyles{
+    text-indent: 10px;
+    border-radius: 8px;
+    width: 100%;
+    border: 1px solid lightgray;
+    outline: none;
+    padding: 5px;
+    background: white;
+}
+.inputStyles::before, .inputStyles::after{
+    background: white;
+}
+.inputTitle{
+    padding: 5px 0;
+    font-weight: 500;
+    font-size: 14px;
+}
+.noBorder{
+    border: none;
+    outline: none;
+    text-indent: 10px;
+}
+.agreeTerms{
+    color: #374151;
+}
+.f14{
+    font-size: 14px;
+}
+.warning{
+    background-color: #FFE4E6;
+    color: #E11D48;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+.textWarn{
+    padding: 0 6px;
+    font-size: 14px;
+}
+.logIn{
+    width: 100%;
+    font-size: 14px;
+    background-color: #2790C3;
+    padding: 8px 0;
+    color: white;
+    text-align-last: center;
+    border-radius: 8px;
+}
+.ForgotPassword{
+    text-transform: none;
+    color: red;
+    font-size: 14px;
+    padding: 0;
+}
+.customLineStyle{
+    align-self: center;
+    padding: 10px;
+    width: 100%;
+}
+.customLink{
+    color: red;
+}
+.customBtn{
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 8px 1px;
+}
+.btnFont{
+    font-size: 12px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+.titles,.inputTitle{
+    color: gray;
+}
+.passwordShowStyle{
+    color: gray;
+}
+.f12{
+    font-size: 12px;
+}
+.orStyle{
+    color: #9CA3AF;
+    font-size: 14px;
+}
+.warnIconSize{
+    font-size: 22px;
+}
+.checkSize{
+    font-size: 10px;
+}
+.navbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+}

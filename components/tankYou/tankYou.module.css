@@ -1,0 +1,49 @@
+.tankYou{
+    color: #FF0000;
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 97px;
+}
+.purchaseStatus{
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+}
+.success{
+    color: #4CB050;
+}
+.downloadTicket{
+    color: white;
+    background-color: #FF0000;
+    border-radius: 97px;
+    padding: 10px 20px;
+}
+.backToHome{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FF0000;
+}
+.tankYouImage{
+    width: 100%;
+    height: auto;
+    padding: 75px !important;
+}
+@media (max-width: 768px) {
+    .tankYouImage{
+        width: 100%;
+        height: auto;
+        padding: 15px !important;
+    }
+    .tankYou{
+        color: #FF0000;
+        font-weight: 700;
+        font-size: 48px;
+        line-height: 58px;
+    }
+    .purchaseStatus{
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+    }
+}

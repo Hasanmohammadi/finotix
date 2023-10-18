@@ -1,0 +1,33 @@
+{
+  "h1Text": {
+    "cityName": "Turkey",
+    "mainText": " Online Travel Solutions"
+  },
+  "titleText": "Enhance your business efficiency",
+  "flights": "Flights",
+  "stays": "Stays",
+  "from": "From",
+  "fromHintPoint": "Departing from?",
+  "to": "To",
+  "toHintPoint": "Going to?",
+  "date": "Date",
+  "departureDate": "Departure Date",
+  "returnDate": "Return Date",
+  "dateHitPoint": "Departure and return date",
+  "search": "Search",
+  "travelWay": {
+    "roundTrip": "Round-Trip",
+    "oneWay": "One Way"
+  },
+  "travelClass": {
+    "economy": "Economy",
+    "business": "Business",
+    "firstClass": "First Class",
+    "promo": "Promo"
+  },
+  "travelPersons": {
+    "adult": "Adult",
+    "children": "Children",
+    "infants": "Infants"
+  }
+}

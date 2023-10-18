@@ -1,0 +1,13 @@
+{
+  "title" : "İletişim bilgileri",
+  "address" : "Adres :",
+  "textAddress" : "701, Roshan Binası, Kamran sokağı. Parkway ve Tajrish arasında, Valiasr St., Tahran.",
+  "phone" : "Telefon :",
+  "textPhone" : "+9821-96621616",
+  "email" : "E-posta:" ,
+  "textEmail" : "info@iati.ir",
+  "workingHours" : "Çalışma saatleri :",
+  "textWorkingHours" : "9AM - 12PM",
+  "footerText" : "Tüm hakları saklıdır",
+  "footerLink" : "Finotix 2022"
+}

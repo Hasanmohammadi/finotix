@@ -1,0 +1,26 @@
+.container{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px;
+}
+.titles{
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 157.3%;
+    color: #3A3A3A;
+}
+.checkBoxes{
+    height: 20px;
+    width: 20px;
+    background-color: red!important;
+    color: red!important;
+    accent-color: red!important;
+}
+.customCheck{
+    background-color: #F0F0F0;
+    height: 20px;
+    width: 20px;
+    z-index: 10;
+    position: absolute;
+    right: 0;
+}

@@ -1,0 +1,87 @@
+.roomContainer{
+    background: #FFFFFF;
+    border-radius: 10px;
+    min-height: 100px;
+    width: 100%;
+}
+.cardPadding{
+    padding: 10px;
+}
+.roomStays{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 38px;
+    color: #90ADB7;
+}
+.roomCurrency{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    text-align: center;
+    color: #000000;
+}
+.roomPrice{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    color: #000000;
+}
+.Availability{
+    background: #FF0000;
+    border-radius: 9px;
+    padding: 8px 20px;
+    color: #FFFFFF;
+}
+.roomLeft{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #000000;
+}
+.hotelName{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.01em;
+    color: #000000;
+}
+.hotelStars{
+    color: #F6C92D;
+    padding-bottom: 10px;
+}
+.starFontSiz{
+    font-size: 16px ;
+}
+.hotelLocation{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #000000;
+}
+.circleSize{
+    font-size: 10px;
+    color: #999999;
+}
+.showOnMap{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    text-decoration-line: underline;
+    text-underline-offset: 3px;
+    color: #2790C3;
+}
+.hotelDistance{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #7B7B7B;
+}

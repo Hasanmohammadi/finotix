@@ -1,0 +1,19 @@
+{
+  "signIn" : "Sign In",
+  "email" : "Email Address",
+  "password" : "Password",
+  "passwordPlaceholder" : "8+ characters",
+  "warnText" : "Incorrect email or password! Try again.",
+  "logIn" : "Log In",
+  "keepMe" : "Keep me logged in",
+  "forgotPassword" : "Forgot Password",
+  "or" : "or",
+  "googleLogIn" : "Log in with Google",
+  "facebookLogIn" : "Log in with Facebook",
+  "dontHaveAccount" : "Don't have an account?",
+  "createOne" : "Create one",
+  "modalForgotPass" : "Forgot Password?",
+  "modalText" : "did you forgot your password?",
+  "modalEmail" : "Email Address",
+  "modalSubmit" : "Submit"
+}

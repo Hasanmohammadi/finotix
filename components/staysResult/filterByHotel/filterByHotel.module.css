@@ -1,0 +1,19 @@
+.goldStar{
+    color: #F6C92D;
+}
+.grayStar{
+    color: #D8D8D8;
+}
+.startContainer{
+    padding: 24px;
+}
+.stars{
+    padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.stars input{
+    height: 25px;
+    width: 25px;
+    accent-color: red;
+}

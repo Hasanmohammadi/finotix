@@ -1,0 +1,30 @@
+{
+  "h1Text": {
+    "cityName": "Türk",
+    "mainText": " Çevrimiçi Seyahat Çözümleri"
+  },
+  "titleText": "İş verimliliğinizi artırın",
+  "flights": "uçuşlar",
+  "stays": "Konaklama",
+  "from": "İtibaren",
+  "fromHintPoint": "Dan ayrılmak?",
+  "to": "İle",
+  "toHintPoint": "Gidiyor?",
+  "date": "Tarih",
+  "dateHitPoint": "Kalkış ve dönüş tarihi",
+  "search": "Arama",
+  "travelWay": {
+    "roundTrip": "Gidiş",
+    "oneWay": "Tek Yön"
+  },
+  "travelClass": {
+    "economy": "ekonomi",
+    "business": "İşletme",
+    "firstClass": "Birinci sınıf"
+  },
+  "travelPersons": {
+    "adult": "Yetişkin",
+    "children": "Çocuklar",
+    "infants": "bebekler"
+  }
+}

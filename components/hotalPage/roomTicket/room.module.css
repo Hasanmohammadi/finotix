@@ -1,0 +1,64 @@
+.roomContainer{
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    min-height: 100px;
+}
+.roomContainerPadding{
+    padding: 15px;
+}
+.textMuted{
+    padding: 0 5px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #8A8A8A;
+    align-self: center;
+}
+.iconSize{
+    font-size: 18px;
+}
+.Cancellation{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #2790C3;
+}
+.roomsFor{
+    font-style: normal;
+    font-size: 12px;
+    line-height: 15px;
+    color: #000000;
+}
+.roomsBold{
+    font-weight: 700;
+    padding: 0 5px ;
+}
+.price{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 27px;
+    text-align: center;
+    color: #000000;
+}
+.ticketMuted{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    color: #8A8A8A;
+}
+.reserveBtn{
+    background: #2790C3;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 8px 15px;
+}
+
+

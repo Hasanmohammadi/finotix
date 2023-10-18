@@ -1,0 +1,23 @@
+.searchInput{
+    border: none;
+    outline: none;
+}
+.searchBorder{
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 10px
+}
+.showBy{
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    color: #393939 !important;
+}
+.sortBy{
+    background: transparent;
+    padding: 0 5px;
+}

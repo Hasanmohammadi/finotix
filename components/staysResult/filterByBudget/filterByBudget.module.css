@@ -1,0 +1,21 @@
+.budgetContainer{
+    padding: 24px;
+}
+.budgetItem{
+    justify-content: space-between;
+    display: flex;
+    width: 100%;
+    padding: 5px 0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: #3A3A3A;
+}
+.budgetInput{
+    height: 25px;
+    width: 25px;
+    accent-color: red;
+}
+
+

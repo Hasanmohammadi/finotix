@@ -1,0 +1,16 @@
+.footerContainer{
+    background-color: #393939;
+    color: white;
+}
+.footerLine{
+    border-top: 1px solid #515151;
+    padding: 10px;
+}
+.title{
+    color: #FFFFFF;
+    font-size: 14px;
+}
+.text{
+    color: #DDDDDD;
+    font-size: 14px ;
+}

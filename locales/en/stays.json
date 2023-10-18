@@ -1,0 +1,18 @@
+{
+  "staysText" : {
+    "hotels" : "hotels ,",
+    "homes" : "homes",
+    "text" : " and more for all desires"
+  },
+  "staysTitle" : "Enhance your business efficiency",
+  "Flights" : "Flights",
+  "Stays" : "Stays",
+  "go" : "Going to?",
+  "goHitPoint" : "Where are you going to?",
+  "date" : "Date",
+  "room" : "room",
+  "adults" : "adults",
+  "children" : "children",
+  "dateHitPoint" : "Check in and Check out date",
+  "search" : "Search"
+}

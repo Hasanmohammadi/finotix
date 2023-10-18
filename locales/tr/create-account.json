@@ -1,0 +1,16 @@
+{
+  "createAnAccount" : "Hesap oluştur",
+  "name" : "İlk adı",
+  "lastName" : "Soy isim",
+  "email" : "Email Address",
+  "password" : "Şifre",
+  "warnText" : "Bu e-postaya sahip bir hesap zaten var!",
+  "createAccountBtn" : "Hesap oluştur",
+  "agreeTerms" : "Hizmet Şartlarını ve Gizlilik Politikasını kabul ediyorum",
+  "alreadyMember" : "Zaten bir üye misiniz?",
+  "signIn" : "Kayıt olmak",
+  "googleLogIn" : "Google ile giriş yapın",
+  "facebookLogIn": "Facebook ile giriş",
+  "passwordPlaceholder" : "8+ karakter",
+  "or" : "veya"
+}

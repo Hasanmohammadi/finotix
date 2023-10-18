@@ -1,0 +1,13 @@
+{
+  "title" : "اطلاعات تماس",
+  "address" : "نشانی :",
+  "textAddress" : "کوچه کامران، ساختمان روشن، پلاک ۷۰۱. تهران، خیابان ولیعصر، بین پارک وی و تجریش.",
+  "phone" : "تلفن :",
+  "textPhone" : "+9821-96621616",
+  "email" : "پست الکترونیک :" ,
+  "textEmail" : "info@iati.ir",
+  "workingHours" : "ساعات کاری :",
+  "textWorkingHours" : "9 صبح تا 12 بعد از ظهر",
+  "footerText" : "تمامی حقوق برای",
+  "footerLink" : "Finotix 2022"
+}

@@ -1,0 +1,19 @@
+{
+  "signIn" : "kayıt olmak",
+  "email" : "E-posta Adresi",
+  "password" : "Şifre",
+  "passwordPlaceholder" : "8+ karakter",
+  "warnText" : "Yanlış eposta adresi veya şifre! Tekrar deneyin.",
+  "logIn" : "Giriş yapmak",
+  "keepMe" : "Oturumumu açık tut",
+  "forgotPassword" : "Parolanızı mı unuttunuz",
+  "or" : "veya",
+  "googleLogIn" : "Google ile giriş yapın",
+  "facebookLogIn" : "Facebook ile giriş",
+  "dontHaveAccount" : "Hesabınız yok mu?",
+  "createOne" : "Bir tane yarat",
+  "modalForgotPass" : "Parolanızı mı unuttunuz?",
+  "modalText" : "şifreni mi unuttun ?",
+  "modalEmail" : "E-posta Adresi",
+  "modalSubmit" : "Göndermek"
+}

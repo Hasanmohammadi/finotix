@@ -1,0 +1,33 @@
+.container{
+    background: #FFFFFF;
+    border-radius: 9px;
+    min-height: 100px;
+    padding: 20px;
+}
+.title{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.01em;
+    color: #000000;
+}
+.button{
+    background: #90ADB7;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: #FFFFFF;
+}
+.text{
+    justify-content: space-between;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: -0.01em;
+    color: #686868;
+    align-self: center;
+}
+.icon{
+    color: #A2A2A2;
+}

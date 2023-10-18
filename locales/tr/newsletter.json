@@ -1,0 +1,12 @@
+{
+  "title": "TRStay up to date",
+  "subtitle": "TRSubscribe to my newsletter",
+  "form": {
+    "firstName": "TRFirst name",
+    "email": "TRE-mail",
+    "action": {
+      "signUp": "TRSign Up",
+      "cancel": "TRCancel"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "formName": "Your Name",
+  "formEmail" : "Your Email Address",
+  "formMessage" : "Your Message here",
+  "contactUs" : "CONTACT US",
+  "titleMessage" : "Feel free to contact us with contact detail or form below. We’ll respond quickly.",
+  "phone" : "Phone :",
+  "phoneNumber" : "+9821-96621616",
+  "email" : "Email Address :",
+  "emailAddress" : "info@irsa.com",
+  "workTime" : "Working Hours :",
+  "workingHours" : "9AM - 12PM",
+  "address" : "address",
+  "addressLocate" : "No. 701, Roshan Building, Kamran alley. Between Parkway and Tajrish, Valiasr St. , Tehran",
+  "submit" : "submit"
+}

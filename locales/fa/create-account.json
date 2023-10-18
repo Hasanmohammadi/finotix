@@ -1,0 +1,16 @@
+{
+  "createAnAccount" : "یک حساب کاربری ایجاد کنید",
+  "name" : "نام کوچک",
+  "lastName" : "نام خانوادگی",
+  "email" : "آدرس ایمیل",
+  "password" : "کلمه عبور",
+  "warnText" : "یک حساب کاربری با آن ایمیل از قبل وجود دارد!",
+  "createAccountBtn" : "یک حساب کاربری ایجاد کنید",
+  "agreeTerms" : "من با شرایط خدمات و سیاست حفظ حریم خصوصی موافقم",
+  "alreadyMember" : "قبلا عضو هستید؟",
+  "signIn" : "ورود",
+  "googleLogIn" : "با گوگل وارد شوید",
+  "facebookLogIn": " ورود با فیس بوکk",
+  "passwordPlaceholder" : " +۸ کاراکتر",
+  "or" : "یا"
+}

@@ -1,0 +1,30 @@
+{
+  "h1Text": {
+    "cityName": "ایران",
+    "mainText": " راه حل های آنلاین سفر"
+  },
+  "titleText": "کارایی کسب و کار خود را افزایش دهید",
+  "flights": "پرواز‌ها",
+  "stays": "اقامتگاه",
+  "from": "از کجا",
+  "fromHintPoint": "خروج از؟",
+  "to": "به کجا",
+  "toHintPoint": "قصد دارم به؟",
+  "date": "تاریخ",
+  "dateHitPoint": "تاریخ حرکت و بازگشت",
+  "search": "جستجو کردن",
+  "travelWay": {
+    "roundTrip": "رفت و برگشت",
+    "oneWay": "یک طرفه"
+  },
+  "travelClass": {
+    "economy": "اقتصادی",
+    "business": "کاری",
+    "firstClass": "کلاس اول"
+  },
+  "travelPersons": {
+    "adult": "بزرگسال",
+    "children": "فرزندان",
+    "infants": "نوزادان"
+  }
+}

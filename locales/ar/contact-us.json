@@ -1,0 +1,16 @@
+{
+  "formName": "اسمك",
+  "formEmail" : "عنوان بريدك  الإلكتروني",
+  "formMessage" : "رسالتك هنا",
+  "contactUs" : "اتصل بنا",
+  "phone" : "هاتف",
+  "titleMessage" : "لا تتردد في الاتصال بنا مع تفاصيل الاتصال أو النموذج أدناه. سنرد بسرعة.",
+  "phoneNumber" : "+9821-96621616",
+  "email" : "البريد الإلكتروني",
+  "emailAddress" : "info@irsa.com",
+  "workTime" : "ساعات العمل :",
+  "workingHours" : "9AM - 12PM",
+  "address" : "تبوك :",
+  "addressLocate" : "701 بناية روشان زقاق كمران. بين باركواي وتجريش ، شارع وليعصر ، طهران",
+  "submit" : "إرسال"
+}

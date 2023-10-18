@@ -1,0 +1,118 @@
+.boxContainer {
+  border-radius: 10px;
+  background-color: white;
+}
+.boxTitle {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 19px;
+  color: #3a3a3a;
+}
+.link {
+  color: #5a8cec;
+}
+.link:disabled {
+  color: #dae6ff;
+  cursor: not-allowed;
+}
+.linkStyles {
+  padding: 10px 30px;
+  font-size: 18px;
+}
+.btnStyles {
+  padding: 14px 0;
+  width: 90%;
+}
+.navParent {
+  background-color: white;
+  border-radius: 10px;
+}
+.active {
+  border-bottom: 3px solid red !important;
+  color: black !important;
+}
+.ticketContainer {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+}
+.cheapest {
+  padding-bottom: 5px;
+}
+.cheapestBadge {
+  background-color: #04d30014;
+  color: #1e831c;
+  padding: 4px 16px;
+  border-radius: 28px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.currencyStyles {
+  font-size: 13px;
+}
+.tripPriceStyles {
+  font-size: 18px;
+  font-weight: 700;
+}
+.bookBtn {
+  background-color: red;
+  padding: 10px 52px;
+  color: white;
+  border-radius: 7px;
+}
+.airlineName {
+  color: #90adb7;
+  font-size: 13.5px;
+  align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 21px;
+  max-height: 48px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.stopStyle {
+  color: #646464;
+  font-size: 12px;
+  align-self: center;
+}
+.twoIcons {
+  position: relative !important;
+}
+.iconsOne {
+  position: absolute !important;
+  z-index: 5;
+}
+.iconTwo {
+  position: absolute !important;
+  left: 30px;
+  z-index: 1;
+}
+.textMuted {
+  color: #3a3a3a;
+}
+.luggageStyle {
+  font-size: 35px !important;
+  color: #717171;
+}
+.stopTime {
+  background: #f0f0f0;
+  border-radius: 28px;
+  padding: 10px 20px;
+  position: absolute;
+  bottom: -20px;
+  left: 40%;
+}
+.stopBorder {
+  border-bottom: 2px dashed #b8b8b8;
+  position: relative;
+}
+.underPlaneLine {
+  width: 100%;
+  border-bottom: 1px solid #f9f9f9;
+  position: absolute;
+  top: 50%;
+  z-index: 0;
+}

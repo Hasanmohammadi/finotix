@@ -1,0 +1,25 @@
+{
+  "filterByPrice" : "Filter by Price",
+  "filterByStop" : "Filter by Stop",
+  "noneStop" : "Non-stop",
+  "oneStop" : "One Stop",
+  "twoStop" : "Two Stop",
+  "filterByAirline" : "Filter by Airline",
+  "pegasus" : "Pegasus",
+  "airFrance" : "Air France",
+  "airSerbia" : "Air Serbia",
+  "tunisAir" : "Tunis Air",
+  "turkishAirlines" : "Turkish Airlines",
+  "navBest" : "Best",
+  "navCheapest" : "Cheapest",
+  "navQuickest" : "Quickest",
+  "navNonstop" : "Nonstop",
+  "details" : "Details",
+  "book" : "Book",
+  "USD" : "USD",
+  "1stopTicket" : "1 stop",
+  "noneStopTicket" : "nonstop",
+  "cheapest" : "cheapest"
+
+
+}

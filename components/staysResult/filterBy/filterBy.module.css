@@ -1,0 +1,11 @@
+.boxContainer{
+    border-radius: 10px;
+    background-color: white;
+}
+.boxTitle{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 19px;
+    color: #3A3A3A;
+}

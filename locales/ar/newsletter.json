@@ -1,0 +1,12 @@
+{
+  "title": "ARStay up to date",
+  "subtitle": "ARSubscribe to my newsletter",
+  "form": {
+    "firstName": "ARFirst name",
+    "email": "ARE-mail",
+    "action": {
+      "signUp": "ARSign Up",
+      "cancel": "ARCancel"
+    }
+  }
+}

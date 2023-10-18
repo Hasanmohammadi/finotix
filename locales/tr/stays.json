@@ -1,0 +1,18 @@
+{
+  "staysText" : {
+    "hotels" : "oteller ,",
+    "homes" : "evler",
+    "text" : " ve tüm arzular için daha fazlası"
+  },
+  "staysTitle" : "İş verimliliğinizi artırın",
+  "Flights" : "uçuşlar",
+  "Stays" : "Konaklama",
+  "go" : "Gidiyor?",
+  "goHitPoint" : "Nereye gidiyorsun?",
+  "date" : "Tarih",
+  "room" : "oda",
+  "adults" : "yetişkinler",
+  "children" : "çocuklar",
+  "dateHitPoint" : "Giriş ve Çıkış tarihi",
+  "search" : "Arama"
+}

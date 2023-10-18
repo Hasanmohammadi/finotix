@@ -1,0 +1,43 @@
+.container{
+    background: #FFFFFF;
+    border-radius: 9px;
+    padding: 20px;
+    min-height: 100px;
+}
+.policies{
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: -0.01em;
+    color: #000000;
+}
+.policiesWarn{
+    background: rgba(255, 0, 0, 0.05);
+    border-radius: 6px;
+    padding: 20px;
+}
+.cancellation{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #FF0000;
+}
+.cancellationText{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #3D3D3D;
+}
+.text{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.01em;
+    color: #3D3D3D;
+}

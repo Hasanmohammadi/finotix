@@ -1,0 +1,26 @@
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Header from "../components/header/Header";
+import FareRules from "../components/fareRules/FareRules";
+
+export default function Stays() {
+
+    return (
+        <>
+            <Header />
+            <FareRules/>
+        </>
+    );
+}
+
+export async function getStaticProps({ locale }) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, [
+                "navbar",
+                "stays",
+                "footer"
+            ])),
+            // Will be passed to the page component as props
+        },
+    };
+}

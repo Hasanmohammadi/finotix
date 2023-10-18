@@ -1,0 +1,16 @@
+{
+  "formName": "Adınız",
+  "formEmail" : "E-posta Adresiniz",
+  "formMessage" : "Mesajın Burada",
+  "contactUs" : "BİZE ULAŞIN",
+  "phone" : "telefon",
+  "titleMessage" : "Aşağıdaki iletişim bilgileri veya form ile bizimle iletişime geçmekten çekinmeyin. Hızlı bir şekilde yanıt vereceğiz.",
+  "phoneNumber" : "+9821-96621616",
+  "email" : "e-posta",
+  "emailAddress" : "info@irsa.com",
+  "workTime" : "Çalışma saatleri :",
+  "workingHours" : "9AM - 12PM",
+  "address" : "Adres :",
+  "addressLocate" : "701, Roshan Binası, Kamran sokağı. Parkway ve Tajrish arasında, Valiasr St., Tahran",
+  "submit" : "Sunmak"
+}

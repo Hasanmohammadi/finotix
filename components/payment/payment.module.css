@@ -1,0 +1,41 @@
+.whiteBox {
+  background-color: white;
+  border-radius: 10px;
+}
+.boxContainer {
+  padding: 27px 30px 50px;
+}
+.pay {
+  background: #2790c3;
+  color: white;
+  border-radius: 10px;
+  padding: 1.5rem 7rem;
+}
+.totalAmount {
+  padding-bottom: 20px;
+  font-size: 16px;
+  color: #1f1f1f;
+  font-weight: 600;
+}
+.paymentTermsTitle {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  color: #000000;
+  align-self: center;
+}
+.checkBoxContainer {
+  border: 1px solid #f3f4f6;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+.cardStyle {
+  color: gray;
+}
+.inputStyles {
+  border: 1px solid #bdbdbd;
+  border-radius: 10px;
+  outline: none;
+  width: 100%;
+  padding: 10px;
+}

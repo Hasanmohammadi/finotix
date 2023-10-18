@@ -1,0 +1,92 @@
+.contactInformation {
+  color: #000000;
+  font-weight: 500;
+  font-size: 18px;
+}
+.whiteBox {
+  background-color: white;
+  border-radius: 10px;
+  padding: 27px 35px 50px 35px;
+}
+.whiteBoxYourOrder {
+  background-color: white;
+  border-radius: 10px;
+}
+.inputTotalStyles {
+  width: 100%;
+}
+.passengerTitles {
+  color: #6a6a6a;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.confirmBookingText {
+  color: #3f3f3f;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  padding: 20px 0;
+}
+.continueBtn {
+  background-color: #ff0000;
+  color: white;
+  border-radius: 10px;
+  padding: 15px 55px;
+}
+.yourOrderTitle {
+  color: #1f1f1f;
+  font-weight: 400;
+  font-size: 16px;
+  border-bottom: 1px solid #dcdcdc;
+  padding: 20px;
+}
+.yourOrderContainer {
+  padding: 20px;
+  color: #3a3a3a;
+}
+.circleShape {
+  height: 30px;
+  width: 30px;
+  background-color: #e5e7eb;
+  border-radius: 50%;
+}
+.centerOfCircle {
+  position: relative;
+  border-bottom: 2px dashed #d8d8d8;
+  height: 20px;
+}
+.leftCircle {
+  position: absolute;
+  right: -35px;
+  top: 5px;
+  overflow: hidden;
+}
+.rightCircle {
+  position: absolute;
+  left: -35px;
+  top: 5px;
+  overflow: hidden;
+}
+.borderBottom {
+  border-bottom: 1px solid #ededed;
+}
+.bottomTicketContainer {
+  padding: 20px;
+}
+.planeDeparture {
+  transform: rotate(90deg);
+  color: #90adb7;
+  font-size: 18px;
+}
+.planeReturn {
+  transform: rotate(270deg);
+  color: #90adb7;
+  font-size: 18px;
+}
+.orderText {
+  padding-top: 10px;
+  font-weight: 400;
+  font-size: 15px;
+  color: #3a3a3a;
+}

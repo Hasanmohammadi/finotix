@@ -1,0 +1,30 @@
+{
+  "h1Text": {
+    "cityName": "عربي",
+    "mainText": " حلول السفر عبر الإنترنت"
+  },
+  "titleText": "تعزيز كفاءة عملك",
+  "flights": "الرحلات الجوية",
+  "stays": "يبقى",
+  "from": "من",
+  "fromHintPoint": "يغادر من؟",
+  "to": "إلى",
+  "toHintPoint": "الذهاب الى؟",
+  "date": "تاريخ",
+  "dateHitPoint": "تاريخ المغادرة والعودة",
+  "search": "يبحث",
+  "travelWay": {
+    "roundTrip": "ذهابا وإيابا",
+    "oneWay": "طريقة واحدة"
+  },
+  "travelClass": {
+    "economy": "اقتصاد",
+    "business": "اعمال",
+    "firstClass": "الصف الأول"
+  },
+  "travelPersons": {
+    "adult": "الكبار",
+    "children": "أطفال",
+    "infants": "الرضع"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "title" : "Contact Information",
+  "address" : "Address :",
+  "textAddress" : "No. 701, Roshan Building, Kamran alley. Between Parkway and Tajrish , Valiasr St. , Tehran .",
+  "phone" : "Phone :",
+  "textPhone" : "+9821-96621616",
+  "email" : "Email :" ,
+  "textEmail" : "info@iati.ir",
+  "workingHours" : "Working Hours :",
+  "textWorkingHours" : "9AM - 12PM",
+  "footerText" : "All rights reserved for",
+  "footerLink" : "Finotix 2022"
+}

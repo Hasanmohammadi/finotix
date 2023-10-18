@@ -1,0 +1,36 @@
+.failed{
+    color: #FF0000;
+    font-weight: 700;
+    font-size: 80px;
+    line-height: 97px;
+}
+.purchaseStatus{
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+}
+.downloadTicket{
+    color: white;
+    background-color: #FF0000;
+    border-radius: 97px;
+    padding: 10px 20px;
+}
+.backToHome{
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FF0000;
+}
+@media (max-width: 768px) {
+    .failed{
+        color: #FF0000;
+        font-weight: 700;
+        font-size: 48px;
+        line-height: 58px;
+    }
+    .purchaseStatus{
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 19px;
+    }
+}

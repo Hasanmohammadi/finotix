@@ -1,0 +1,53 @@
+.aboutUs{
+    color: red;
+    font-size: 40px;
+    font-weight: 900;
+    padding-bottom: 10px;
+}
+.aboutUsText{
+    padding-top: 1.8rem;
+    font-size: 20px ;
+    font-weight: normal;
+}
+.aboutDescription{
+    border: 2px dashed #BDBDBD;
+    border-radius: 16px;
+}
+.redTitleCenter{
+    font-weight: 500;
+    font-size: 26px;
+    color: #FF0000;
+}
+.paddingOurPartners{
+    padding-top: 11rem;
+    padding-bottom: 2rem;
+}
+.ourPartnersTitle{
+    font-size: 18px;
+    padding-bottom: 4rem;
+    color: #1F1F1F;
+}
+.ourPartnersContainer{
+    padding: 0 6rem;
+}
+.halfCart{
+    border: 1px solid lightgray;
+    padding: 50px;
+    border-radius: 26px;
+}
+.featuresTitle{
+    font-size: 24px;
+    font-weight: 900;
+    padding: 15px 0 35px 0;
+}
+.cartTitle{
+    font-weight: 100;
+    font-size: 18px;
+    color: #1F1F1F;
+}
+.aboutUsDescription{
+    color: #1F1F1F;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 35px;
+}

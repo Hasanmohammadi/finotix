@@ -1,0 +1,19 @@
+.filterContainer{
+    background-color: white !important;
+    border-radius: 16px;
+}
+.title{
+    padding: 24px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #3A3A3A;
+}
+.items{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: #3A3A3A;
+}

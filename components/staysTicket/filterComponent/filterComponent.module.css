@@ -1,0 +1,16 @@
+.container{
+    background-color: white;
+    border-radius: 9px;
+}
+.titleContainer{
+    padding: 10px;
+}
+.title{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #3A3A3A;
+}
+.componentContainer{
+    padding: 10px;
+}

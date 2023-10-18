@@ -1,0 +1,28 @@
+.searchBoxContainer{
+    background: white;
+    padding: 10px;
+    border-radius: 9px;
+}
+.title{
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 19px;
+    color: #3A3A3A;
+}
+.searchBorder{
+    border: 1.5px solid #DDDDDD;
+    border-radius: 4px;
+    display: flex;
+    padding: 5px 0;
+    position: relative;
+}
+.icon{
+    position: absolute;
+    left: auto;
+    right: 10px;
+}
+.searchArea{
+    border: none;
+    outline: none;
+    padding-left: 10px;
+}

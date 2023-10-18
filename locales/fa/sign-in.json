@@ -1,0 +1,19 @@
+{
+  "signIn" : "ورود",
+  "email" : "آدرس ایمیل",
+  "password" : "کلمه عبور",
+  "passwordPlaceholder" : "8+ کاراکتر",
+  "warnText" : "کلمه عبور یا ایمیل اشتباه است! دوباره امتحان کنید.",
+  "logIn" : "وارد شدن",
+  "keepMe" : "مرا وارد سیستم نگه دارید",
+  "forgotPassword" : "رمز عبور را فراموش کرده اید",
+  "or" : "یا",
+  "googleLogIn" : "با گوگل وارد شوید",
+  "facebookLogIn" : "ورود با فیس بوک",
+  "dontHaveAccount" : "حساب کاربری ندارید؟",
+  "createOne" : "یکی بساز",
+  "modalForgotPass" : "رمز عبور را فراموش کرده اید؟",
+  "modalText" : "رمز عبور خود را فراموش کرده اید؟",
+  "modalEmail" : "آدرس ایمیل",
+  "modalSubmit" : "ارسال"
+}
