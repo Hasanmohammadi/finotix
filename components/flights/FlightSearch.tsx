@@ -126,7 +126,7 @@ export default function FlightSearch({
   const [departureDateInput, setDepartureDateInput] =
     useState<DateI>(departureDate)
   const [returnDateInput, setReturnDateInput] = useState<DateI>(returnDate)
-  const [wayTrip, setWayTrip] = useState(tripType)
+  const [wayTrip, setWayTrip] = useState<'Round-trip' | 'One Way'>(tripType)
   const [airplaneClass, setAirplaneClass] = useState('ECONOMY')
   const [origin, setOrigin] = useState('')
   const [destination, setDestination] = useState('')
@@ -210,8 +210,8 @@ export default function FlightSearch({
       year,
     })
   }
-
-  const datePickerRef = useRef(null)
+  type DatePickerType = typeof DatePicker
+  const datePickerRef = useRef<{ openCalendar: () => void } | null>(null)
 
   function handleReturnDate(data: any[]) {
     setReturnDateInput({
@@ -288,6 +288,11 @@ export default function FlightSearch({
     }
   }, [wayTrip])
 
+  const depDate = new Date(
+    departureDateInput.year,
+    departureDateInput.month - 1,
+    departureDateInput.day
+  )
   return (
     <div className={clsx({ 'py-4': isStickyPosition })}>
       <div
@@ -479,9 +484,7 @@ export default function FlightSearch({
                 ) : (
                   <DatePicker
                     minDate={`${departureDate.year}-${departureDate.month}-${departureDate.day}`}
-                    disabled={wayTrip === 'One Way'}
                     ref={datePickerRef}
-                    rangeHover
                     render={() => (
                       <div
                         className="cursor-pointer text-start"
@@ -498,13 +501,11 @@ export default function FlightSearch({
                         departureDateInput.month - 1,
                         departureDateInput.day
                       ),
-                      returnDate.day
-                        ? new Date(
-                            returnDate.year,
-                            returnDate.month - 1,
-                            returnDate.day
-                          )
-                        : '',
+                      new Date(
+                        returnDate.year,
+                        returnDate.month - 1,
+                        returnDate.day
+                      ),
                     ]}
                     onChange={handleReturnDate}
                     numberOfMonths={1}

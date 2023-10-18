@@ -19,10 +19,6 @@ import AirplaneIcon from '../../styles/images/airplane'
 const YourOrder = () => {
   const { departureFlightInfo, returnFlightInfo, fare, currencyCode } =
     useAppSelector((state) => state.airportsInfo)
-  console.log(
-    '🚀 ~ file: YourOrder.tsx:12 ~ YourOrder ~ departureFlightInfo:',
-    departureFlightInfo
-  )
 
   const dispatch = useAppDispatch()
 

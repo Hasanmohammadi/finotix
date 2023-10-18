@@ -13,16 +13,19 @@ export default function usePostSearchResult({
 }: {
   onSuccess?: (newData: FrontDataSearchResultI) => void
 }) {
-  const { mutate, isLoading, data, isError } = useMutation(postSearchResult, {
-    onSuccess: () => {
-      if (onSuccess)
-        onSuccess(convertApiToFrontData(data as GetSearchResultResultI))
-    },
-    onError(err) {
-      const error = err as AxiosError
-      toast.error(error.message)
-    },
-  })
+  const { mutate, isLoading, data, isError, status } = useMutation(
+    postSearchResult,
+    {
+      onSuccess: () => {
+        if (onSuccess)
+          onSuccess(convertApiToFrontData(data as GetSearchResultResultI))
+      },
+      onError(err) {
+        const error = err as AxiosError
+        toast.error(error.message)
+      },
+    }
+  )
 
   return {
     postSearchResultAction: mutate,

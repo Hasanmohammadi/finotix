@@ -5,7 +5,7 @@ import { CircularProgress } from '@mui/material'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useRouter } from 'next/router'
-import { useEffect, useState, useReducer } from 'react'
+import { useEffect, useState } from 'react'
 import { isMobile as isMobileSize } from 'react-device-detect'
 import { useDispatch } from 'react-redux'
 import { setTotalFareAmounts } from '../airportsSlice'
@@ -139,7 +139,7 @@ export default function Home() {
           )}
           {!!((searchResultData?.remainingCountAfterFilter as number) <= 0) && (
             <div className="flex justify-center py-10 pb-16">
-              <p>Done</p>
+              <p>No More Result found</p>
             </div>
           )}
         </>

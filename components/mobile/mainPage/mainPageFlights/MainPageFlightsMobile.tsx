@@ -89,7 +89,6 @@ export default function MainPageFlightsMobile({
   const { t } = useTranslation('main-page')
 
   const { pathname, route, push } = useRouter()
-  console.log('🚀 ~ file: FlightSearch.tsx:116 ~ useRouter():', useRouter())
   const dispatch = useAppDispatch()
   const {
     passengerCount,
@@ -189,7 +188,7 @@ export default function MainPageFlightsMobile({
     })
   }
 
-  const datePickerRef = useRef(null)
+  const datePickerRef = useRef<{ openCalendar: () => void } | null>(null)
 
   function handleReturnDate(data: any[]) {
     setReturnDateInput({
@@ -243,7 +242,6 @@ export default function MainPageFlightsMobile({
     dispatch(setTripType(wayTrip))
     if (wayTrip === 'Round-trip' && !route.includes('/result')) {
       datePickerRef?.current?.openCalendar()
-      console.log('open')
     }
   }, [wayTrip])
 
@@ -401,9 +399,7 @@ export default function MainPageFlightsMobile({
               <>
                 <DatePicker
                   minDate={`${departureDate.year}-${departureDate.month}-${departureDate.day}`}
-                  disabled={wayTrip === 'One Way'}
                   ref={datePickerRef}
-                  rangeHover
                   render={() => (
                     <div
                       className="cursor-pointer text-start text-sm"
@@ -420,13 +416,11 @@ export default function MainPageFlightsMobile({
                       departureDateInput.month - 1,
                       departureDateInput.day
                     ),
-                    returnDate.day
-                      ? new Date(
-                          returnDate.year,
-                          returnDate.month - 1,
-                          returnDate.day
-                        )
-                      : '',
+                    new Date(
+                      returnDate.year,
+                      returnDate.month - 1,
+                      returnDate.day
+                    ),
                   ]}
                   onChange={handleReturnDate}
                   numberOfMonths={1}

@@ -98,6 +98,7 @@ const PassengerInformation = () => {
       adults: [],
       children: [],
     },
+    //@ts-ignore
     resolver: yupResolver(passengerInformationSchema),
   })
 
@@ -832,19 +833,9 @@ const PassengerInformation = () => {
           the passports of those travelling.
         </p>
         <div className="text-center pb-5">
-          {asPath.includes('role=preview') ? (
-            postAddToCardLoading ? (
-              <CircularProgress />
-            ) : (
-              <button className={styles.continueBtn} onClick={onConfirm}>
-                Confirm
-              </button>
-            )
-          ) : (
-            <button className={styles.continueBtn} type="submit">
-              Continue
-            </button>
-          )}
+          <button className={styles.continueBtn} type="submit">
+            Continue
+          </button>
         </div>
       </div>
     </form>

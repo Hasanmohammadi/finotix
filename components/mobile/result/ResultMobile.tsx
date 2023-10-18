@@ -85,7 +85,7 @@ export default function ResultMobile({
               )}
             </div>
           </div>
-          <div className="w-1/5"> </div>
+          <div className="w-[19%]"> </div>
         </div>
         <TopBarMobile />
       </div>

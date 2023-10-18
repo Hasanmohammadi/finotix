@@ -16,7 +16,7 @@ export default function TravelInformationMobile() {
             onClick={() => router.back()}
           />
           <p className="w-3/5 text-center">Traveler Information</p>
-          <div className="w-1/5"> </div>
+          <div className="w-[19%]"> </div>
         </div>
       </div>
       <TravelInfoMobile />

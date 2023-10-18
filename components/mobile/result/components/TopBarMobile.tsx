@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -34,6 +34,17 @@ export default function TopBarMobile() {
 
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
   const [activeFilter, setActiveFilter] = React.useState('')
+
+  useEffect(() => {
+    if (router.query.sort !== activeFilter) {
+      setActiveFilter('')
+      otherFilters.forEach((filter) => {
+        if (router.query.sort === filter) {
+          setActiveFilter(filter)
+        }
+      })
+    }
+  }, [router.query.sort])
 
   return (
     <div className="absolute flex justify-between -bottom-6 h-12 bg-white w-11/12 m-auto left-0 right-0 rounded-lg">
@@ -79,7 +90,7 @@ export default function TopBarMobile() {
       </div>
       <div
         className={clsx('py-3 rounded-br-lg', {
-          'border-b-2 border-b-[#F00]': activeFilter,
+          'border-b-2 border-b-[#F00]': router.query.sort === activeFilter,
         })}
       >
         <div className="text-gray-900 px-4 self-center font-normal text-sm border-r border-r-gray-300 h-full">
@@ -94,7 +105,7 @@ export default function TopBarMobile() {
               setIsDrawerOpen(true)
             }}
           >
-            {activeFilter ? (
+            {router.query.sort === activeFilter ? (
               <span className="text-xs">{activeFilter}</span>
             ) : (
               <>

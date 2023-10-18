@@ -90,10 +90,6 @@ export default function Results({
       window.addEventListener('scroll', () => setSmall(window.pageYOffset > 20))
     }
   }, [])
-  console.log(
-    '🚀 ~ file: Results.tsx:92 ~ searchResultData?.remainingCountAfterFilter :',
-    data
-  )
 
   return (
     <>
@@ -195,11 +191,13 @@ export default function Results({
                   <CircularProgress />
                 </div>
               )}
-              {!!(remainingData <= 0) && !postSearchResultLoading && (
-                <div className="flex justify-center mt-10">
-                  <p>Done</p>
-                </div>
-              )}
+              {!!(remainingData <= 0) &&
+                !postSearchResultLoading &&
+                !!data?.flightGroups?.length && (
+                  <div className="flex justify-center mt-10">
+                    <p>No more result found !</p>
+                  </div>
+                )}
             </div>
           </div>
         </div>

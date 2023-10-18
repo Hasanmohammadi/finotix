@@ -1,6 +1,6 @@
 import Slider from '@material-ui/core/Slider'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { useAppSelector } from '../../hooks'
 
 interface PriceFilterPropsI {
@@ -32,11 +32,10 @@ export default function PriceFilter({
   // useEffect(() => {
   //   setValue(router.query.price as string[])
   // }, [router.query.price?.[0]])
-  // console.log('🚀 ~ file: PriceFilter.tsx:22 ~ value:', value)
 
   const [value, setValue] = useState<number[]>(totalFareAmounts)
 
-  const handleChange = (event: Event, newValue: number | number[]) => {
+  const handleChange = (_: ChangeEvent<{}>, newValue: number | number[]) => {
     setValue(newValue as number[])
   }
 

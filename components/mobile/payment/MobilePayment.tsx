@@ -23,20 +23,12 @@ export default function MobilePayment() {
   const router = useRouter()
 
   const { paymentData, postPaymentAction } = usePostPayment()
-  console.log(
-    '🚀 ~ file: MobilePayment.tsx:26 ~ MobilePayment ~ paymentData:',
-    paymentData
-  )
 
   useEffect(() => {
     if (invoiceCode) {
       postPaymentAction({ invoiceCode })
     }
   }, [invoiceCode])
-  console.log(
-    '🚀 ~ file: MobilePayment.tsx:36 ~ MobilePayment ~ invoiceCode:',
-    invoiceCode
-  )
 
   const onSubmit = (data: PayWithCardI) => {
     console.log('🚀 ~ file: PaymentMethods.jsx:30 ~ onSubmit ~ data:', data)
@@ -52,7 +44,7 @@ export default function MobilePayment() {
             onClick={() => router.back()}
           />
           <p className="w-3/5 text-center">Payment</p>
-          <div className="w-1/5"> </div>
+          <div className="w-[19%]"> </div>
         </div>
       </div>
       <TravelInfoMobile />

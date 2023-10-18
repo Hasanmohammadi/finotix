@@ -27,10 +27,6 @@ const Header = () => {
 
   const handleLocaleChange = (event: { target: { value: string } }) => {
     localStorage.setItem('langue', event.target.value)
-    console.log(
-      '🚀 ~ file: Header.jsx:27 ~ handleLocaleChange ~  event.target.value:',
-      event.target.value
-    )
     push(route, asPath, {
       locale: event.target.value,
     })

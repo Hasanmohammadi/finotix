@@ -4,10 +4,6 @@ import { useRouter } from 'next/router'
 
 const TravelerHeader = () => {
   const { asPath } = useRouter()
-  console.log(
-    '🚀 ~ file: TravelerHeader.tsx:6 ~ TravelerHeader ~ asPath:',
-    asPath
-  )
 
   return (
     <>

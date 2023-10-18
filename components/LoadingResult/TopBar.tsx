@@ -1,10 +1,9 @@
-import React from 'react'
-import styles from './loadingResult.module.css'
-import { useRouter } from 'next/router'
-import Button from '@mui/material/Button'
+import { ArrowDropDown, Check, SortOutlined } from '@mui/icons-material'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { SortOutlined } from '@mui/icons-material'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import styles from './loadingResult.module.css'
 
 const otherFilters = [
   'Earliest take-off',
@@ -23,6 +22,8 @@ const TopBar = () => {
   }
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const [activeFilter, setActiveFilter] = React.useState('')
+
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -30,6 +31,17 @@ const TopBar = () => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  useEffect(() => {
+    if (router.query.sort !== activeFilter) {
+      setActiveFilter('')
+      otherFilters.forEach((filter) => {
+        if (router.query.sort === filter) {
+          setActiveFilter(filter)
+        }
+      })
+    }
+  }, [router.query.sort])
 
   return (
     <div className={`grid grid-cols-4 ${styles.navParent}`}>
@@ -59,9 +71,8 @@ const TopBar = () => {
       </div>
       <div
         className={`parentButton flex justify-center ${
-          router.query.sort === 'nonstop' && styles.active
+          router.query.sort === activeFilter && styles.active
         }`}
-        onClick={() => changeParams('nonstop')}
       >
         <button
           id="basic-button"
@@ -71,7 +82,16 @@ const TopBar = () => {
           onClick={handleClick}
           className={styles.btnStyles}
         >
-          <SortOutlined /> Other Sort
+          {router.query.sort === activeFilter ? (
+            <>
+              <span className="">{activeFilter}</span>
+              <ArrowDropDown className="ml-2" />
+            </>
+          ) : (
+            <div className="flex gap-3 justify-center">
+              <SortOutlined fontSize="small" /> <span>Other Sort</span>
+            </div>
+          )}
         </button>
         <Menu
           id="basic-menu"
@@ -84,7 +104,23 @@ const TopBar = () => {
           sx={{ height: '300px' }}
         >
           {otherFilters.map((filter) => (
-            <MenuItem onClick={handleClose}>{filter}</MenuItem>
+            <MenuItem
+              onClick={() => {
+                handleClose
+                if (filter === activeFilter) {
+                  setActiveFilter('')
+                  router.replace('/result', undefined, { shallow: true })
+                } else {
+                  changeParams(filter)
+                  setActiveFilter(filter)
+                }
+              }}
+            >
+              <div className="flex justify-between w-full px-4">
+                {filter}
+                {activeFilter === filter && <Check htmlColor="red" />}
+              </div>
+            </MenuItem>
           ))}
         </Menu>
       </div>

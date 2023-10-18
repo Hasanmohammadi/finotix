@@ -68,6 +68,7 @@ export default function PassengerInformation() {
       adults: [],
       children: [],
     },
+    //@ts-ignore
     resolver: yupResolver(passengerInformationSchema),
   })
 
@@ -127,10 +128,6 @@ export default function PassengerInformation() {
   })
 
   const onConfirm = (data: PassengerInformationI) => {
-    console.log(
-      '🚀 ~ file: PassengerInformation.tsx:192 ~ onConfirm ~ data:',
-      data
-    )
     const adultsInfo = changePassengerInformation(
       data.adults
         .map((adult) => ({
@@ -213,7 +210,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.adults?.[index]?.firstName?.message,
+                              }
+                            )}
                             type="text"
                             id="FirstName"
                             {...register(`adults.${index}.firstName` as const)}
@@ -232,7 +235,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.adults?.[index]?.lastName?.message,
+                              }
+                            )}
                             type="text"
                             id="LastName"
                             {...register(`adults.${index}.lastName` as const)}
@@ -283,7 +292,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.adults?.[index]?.nationalId?.message,
+                              }
+                            )}
                             type="text"
                             id="nationalId"
                             {...register(`adults.${index}.nationalId` as const)}
@@ -302,7 +317,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.adults?.[index]?.firstName?.message,
+                              }
+                            )}
                             type="text"
                             id="Nationality"
                             {...register(
@@ -351,7 +372,14 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.adults?.[index]?.passportNumber
+                                    ?.message,
+                              }
+                            )}
                             type="text"
                             id="PassportNumber"
                             {...register(
@@ -420,7 +448,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.children?.[index]?.firstName?.message,
+                              }
+                            )}
                             type="text"
                             id="FirstName"
                             {...register(
@@ -441,7 +475,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.children?.[index]?.lastName?.message,
+                              }
+                            )}
                             type="text"
                             id="LastName"
                             {...register(`children.${index}.lastName` as const)}
@@ -492,7 +532,13 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.children?.[index]?.nationalId?.message,
+                              }
+                            )}
                             type="text"
                             id="nationalId"
                             {...register(
@@ -513,7 +559,14 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.children?.[index]?.nationality
+                                    ?.message,
+                              }
+                            )}
                             type="text"
                             id="Nationality"
                             {...register(
@@ -562,7 +615,14 @@ export default function PassengerInformation() {
                             </label>
                           </div>
                           <input
-                            className="w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white"
+                            className={clsx(
+                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
+                              {
+                                'border border-red-600':
+                                  errors.children?.[index]?.passportNumber
+                                    ?.message,
+                              }
+                            )}
                             type="text"
                             id="PassportNumber"
                             {...register(
@@ -623,9 +683,15 @@ export default function PassengerInformation() {
                       <>
                         <PhoneInput
                           placeholder="Enter phone number"
-                          className="border border-gray-300 rounded-lg p-2 mt-2"
+                          className={clsx(
+                            'border border-gray-300 rounded-lg p-2 mt-2',
+                            {
+                              'border border-red-600':
+                                errors.contactInformation?.mobileNumber
+                                  ?.message,
+                            }
+                          )}
                           defaultCountry="TR"
-                          onCountryChange={(country) => console.log(country)}
                           {...field}
                         />
                         <span className="text-red-600 text-xs w-full text-center">
@@ -640,7 +706,13 @@ export default function PassengerInformation() {
                     Email Address
                   </p>
                   <input
-                    className="border border-gray-300 rounded-lg p-2 mt-2 w-full"
+                    className={clsx(
+                      'border border-gray-300 rounded-lg p-2 mt-2 w-full',
+                      {
+                        'border border-red-600':
+                          errors.contactInformation?.emailAddress?.message,
+                      }
+                    )}
                     type="email"
                     placeholder="Enter Email Address"
                     {...register(`contactInformation.emailAddress`)}
