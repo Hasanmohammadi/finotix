@@ -1,4 +1,4 @@
-import styles from './AboutUs.module.css'
+import styles from './aboutUs.module.css'
 import Main from '../../styles/images/MainAboutUs.png'
 import turkish from '../../styles/images/turkish.png'
 import qatar from '../../styles/images/qatar.png'
