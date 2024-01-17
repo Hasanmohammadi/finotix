@@ -1,8 +1,8 @@
 {
   "name": "Finotix",
   "short_name": "fnx",
-  "theme_color": "#ff0000",
-  "background_color": "yellow",
+  "theme_color": "#0026ff",
+  "background_color": "#88ff00",
   "display": "fullscreen",
   "orientation": "any",
   "scope": "/",
