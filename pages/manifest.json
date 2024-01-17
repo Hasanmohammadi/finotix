@@ -1,0 +1,15 @@
+{
+  "name": "Finotix",
+  "short_name": "fnx",
+  "theme_color": "#0026ff",
+  "background_color": "#88ff00",
+  "display": "fullscreen",
+  "orientation": "any",
+  "scope": "/",
+  "start_url": "/",
+  "icons": [
+    { "src": "../public/pwaLogo.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "../public/pwaLogo.png", "type": "image/png", "sizes": "256x256" },
+    { "src": "../public/pwaLogo.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}

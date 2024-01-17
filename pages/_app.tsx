@@ -109,13 +109,13 @@ function MyApp({ Component, pageProps }) {
             }
           >
             <Head>
+              <link rel="manifest" href="/manifest.json" />
               <meta charSet="UTF-8" />
               <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1.0"
               />
               <meta name="author" content="FINOTIX" />
-              <link rel="manifest" href="../public/manifest.json" />
             </Head>
             <Component {...pageProps} />
           </div>
