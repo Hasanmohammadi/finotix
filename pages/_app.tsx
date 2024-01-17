@@ -82,6 +82,19 @@ function MyApp({ Component, pageProps }) {
 
   //---------------------
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker registration successful:', registration)
+        })
+        .catch((error) => {
+          console.log('Service Worker registration failed:', error)
+        })
+    }
+  }, [])
+
   return (
     <ContextContainer>
       <Provider store={store}>
@@ -102,6 +115,7 @@ function MyApp({ Component, pageProps }) {
                 content="width=device-width, initial-scale=1.0"
               />
               <meta name="author" content="FINOTIX" />
+              <link rel="manifest" href="../public/manifest.json" />
             </Head>
             <Component {...pageProps} />
           </div>
