@@ -1,5 +1,5 @@
 import PriceFilter from './PriceFilter'
-import Filter from './Filter'
+import Filter from './AirlineFilterBox'
 import TicketsResult from './TicketsResult'
 import Results from './Results'
 

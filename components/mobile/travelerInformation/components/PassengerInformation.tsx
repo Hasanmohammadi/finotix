@@ -1,34 +1,53 @@
+import { Box, CircularProgress, Modal } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DateObject from 'react-date-object'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import DatePicker from 'react-multi-date-picker'
 import PhoneInput, { parsePhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { useDispatch } from 'react-redux'
-import { setInvoiceCode, setPassengersInfo } from '../../../../airportsSlice'
+import { setInvoiceCode } from '../../../../airportsSlice'
+import styles from '../../../../components/travelerInformation/travelerInformation.module.css'
 import convertDateObjectFormatToSimpleString from '../../../../helper/date/convertDateObjectFormatToSimpleString'
 import { useAppSelector } from '../../../../hooks'
 import { usePostAddToCard } from '../../../../hooks/search'
+import ConfirmInformation from '../../../travelerInformation/ConfirmInformation'
 import { PassengerInformationI } from '../../../travelerInformation/PassengerInformation'
 import changePassengerInformation from '../../../travelerInformation/changePassengerInformation'
-import styles from '../../../../components/travelerInformation/travelerInformation.module.css'
-import ConfirmInformation from '../../../travelerInformation/ConfirmInformation'
-import { CircularProgress } from '@mui/material'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import Cookies from 'js-cookie'
 import * as yup from 'yup'
+import useGetCountry from '../../../../hooks/country'
+import { useGetProfileInformation } from '../../../../hooks/profile'
+import SelectSearch from '../../../SelectSearch'
+import SingInUser from '../../../../components/singIn/SingInUser'
+
+const currentDate = new Date()
+
+currentDate.setDate(currentDate.getDate() + 1)
+
+const tomorrowDate = currentDate.toISOString().split('T')[0]
 
 const adultInformationSchema = yup.object().shape({
   firstName: yup.string().required('First Name is required !'),
   lastName: yup.string().required('Last Name is required !'),
-  nationality: yup.string().required('Nationality is required !'),
+  nationality: yup
+    .object()
+    .shape({
+      id: yup.string(),
+      label: yup.string(),
+      isCity: yup.boolean(),
+    })
+    .required('Nationality is required !')
+    .typeError('Search Country Name'),
   nationalId: yup.string().required('National ID is required !'),
   birthDate: yup.mixed().required('Birth Date is required !'), // Accepts both string and Date
   passportNumber: yup.string().required('Passport Number is required !'),
@@ -52,25 +71,42 @@ const passengerInformationSchema = yup.object().shape({
 
 export default function PassengerInformation() {
   const datePickerRef = useRef(null)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
-  const { fare, passengersInfo, priceDetailIds } = useAppSelector(
-    (state) => state.airportsInfo
-  )
+  const { getProfileInfoData, profileInfoAction } = useGetProfileInformation()
+
+  useEffect(() => {
+    profileInfoAction()
+  }, [Cookies.get('userTokenFinotix')])
+
+  const { fare, priceDetailIds } = useAppSelector((state) => state.airportsInfo)
   const dispatch = useDispatch()
   const {
     control,
     handleSubmit,
     register,
     formState: { errors },
+    setValue,
   } = useForm<PassengerInformationI>({
     defaultValues: {
-      contactInformation: { emailAddress: '', mobileNumber: '' },
+      contactInformation: {
+        emailAddress: getProfileInfoData?.emailAddress,
+        mobileNumber: getProfileInfoData?.mobileNo,
+      },
       adults: [],
       children: [],
     },
     //@ts-ignore
     resolver: yupResolver(passengerInformationSchema),
   })
+
+  useEffect(() => {
+    setValue('contactInformation.mobileNumber', getProfileInfoData?.mobileNo)
+    setValue(
+      'contactInformation.emailAddress',
+      getProfileInfoData?.emailAddress
+    )
+  }, [getProfileInfoData])
 
   const { fields: adultsFields, append: adultAppend } =
     useFieldArray<PassengerInformationI>({
@@ -85,14 +121,14 @@ export default function PassengerInformation() {
     })
 
   useEffect(() => {
-    if (fare?.groupFareI[0]?.quantity) {
-      ;[...Array(fare?.groupFareI[0]?.quantity)].map(() => {
-        return adultAppend({
+    if (fare?.groupFareI[1]?.quantity) {
+      ;[...Array(fare?.groupFareI[1]?.quantity)].map(() => {
+        return childAppend({
           firstName: '',
           lastName: '',
           birthDate: '',
           nationality: '',
-          passportExpiryDate: '',
+          passportExpiryDate: tomorrowDate,
           passportNumber: '',
           nationalId: '',
           gender: 1,
@@ -102,14 +138,14 @@ export default function PassengerInformation() {
   }, [])
 
   useEffect(() => {
-    if (fare?.groupFareI[1]?.quantity) {
-      ;[...Array(fare?.groupFareI[1]?.quantity)].map(() => {
-        return childAppend({
+    if (fare?.groupFareI[0]?.quantity) {
+      ;[...Array(fare?.groupFareI[0]?.quantity)].map(() => {
+        return adultAppend({
           firstName: '',
           lastName: '',
           birthDate: '',
           nationality: '',
-          passportExpiryDate: '',
+          passportExpiryDate: tomorrowDate,
           passportNumber: '',
           nationalId: '',
           gender: 1,
@@ -127,54 +163,74 @@ export default function PassengerInformation() {
     },
   })
 
+  const [adultCountrySearched, setAdultCountrySearched] = useState<string>('')
+
+  const { countriesLoading, getCountriesData } = useGetCountry({
+    count: 10,
+    name: adultCountrySearched,
+    form: 'adultPassengerCountry',
+  })
+
   const onConfirm = (data: PassengerInformationI) => {
-    const adultsInfo = changePassengerInformation(
-      data.adults
-        .map((adult) => ({
-          ...adult,
-          birthDate: convertDateObjectFormatToSimpleString(
-            adult?.birthDate as DateObject
-          ),
-          passportExpiryDate: convertDateObjectFormatToSimpleString(
-            adult?.passportExpiryDate as DateObject
-          ),
-        }))
-        .filter(({ firstName }) => !!firstName)
-    )
-    const childrenInfo = data?.children.length
-      ? changePassengerInformation(
-          data.children
-            .map((child) => ({
-              ...child,
-              birthDate: convertDateObjectFormatToSimpleString(
-                child?.birthDate as DateObject
-              ),
-              passportExpiryDate: convertDateObjectFormatToSimpleString(
-                child?.passportExpiryDate as DateObject
-              ),
-            }))
-            .filter(({ firstName }) => !!firstName),
-          data?.adults.length - 1
-        )
-      : []
-    postAddToCardAction({
-      searchId: localStorage.getItem('searchId') as string,
-      passengersInfo: {
-        emailAddess: data?.contactInformation?.emailAddress,
-        telephoneNo: data?.contactInformation?.mobileNumber,
-        mobileNo: {
-          cellPhoneNumber: parsePhoneNumber(
-            data?.contactInformation?.mobileNumber
-          )?.nationalNumber as string,
-          countryCode: `+${
-            parsePhoneNumber(data?.contactInformation?.mobileNumber)
-              ?.countryCallingCode as string
-          }`,
+    if (Cookies.get('userTokenFinotix')) {
+      const adultsInfo = changePassengerInformation(
+        data.adults
+          .map((adult) => ({
+            ...adult,
+            birthDate: convertDateObjectFormatToSimpleString(
+              adult?.birthDate as DateObject
+            ),
+            passportExpiryDate: convertDateObjectFormatToSimpleString(
+              adult?.passportExpiryDate as DateObject
+            ),
+          }))
+          .filter(({ firstName }) => !!firstName),
+        'adult'
+      )
+      const childrenInfo = data?.children.length
+        ? changePassengerInformation(
+            data.children
+              .map((child) => ({
+                ...child,
+                birthDate: convertDateObjectFormatToSimpleString(
+                  child?.birthDate as DateObject
+                ),
+                passportExpiryDate: convertDateObjectFormatToSimpleString(
+                  child?.passportExpiryDate as DateObject
+                ),
+              }))
+              .filter(({ firstName }) => !!firstName),
+            'child'
+          )
+        : []
+      postAddToCardAction({
+        searchId: localStorage.getItem('searchId') as string,
+        passengersInfo: {
+          emailAddess: data?.contactInformation?.emailAddress,
+          telephoneNo: data?.contactInformation?.mobileNumber,
+          mobileNo: {
+            cellPhoneNumber: parsePhoneNumber(
+              data?.contactInformation?.mobileNumber
+            )?.nationalNumber as string,
+            countryCode: `+${
+              parsePhoneNumber(data?.contactInformation?.mobileNumber)
+                ?.countryCallingCode as string
+            }`,
+          },
+          passengers: [...adultsInfo, ...childrenInfo],
         },
-        passengers: [...adultsInfo, ...childrenInfo],
-      },
-      priceDetailIds,
-    })
+        priceDetailIds,
+      })
+    } else {
+      setModalIsOpen(true)
+    }
+  }
+
+  const scrollToFirstError = () => {
+    const firstErrorField = document.querySelector('.error')
+    if (firstErrorField) {
+      firstErrorField.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -194,9 +250,42 @@ export default function PassengerInformation() {
                       key={id}
                     >
                       <div className=" items-center">
-                        <div className="border-b border-b-gray-200 pb-3 px-4">
-                          <span>{index + 1}.</span>
-                          <span className="px-1 ">Adult</span>
+                        <div className="border-b border-b-gray-200 pb-3 px-4 flex justify-between">
+                          <div className="mt-1.5">
+                            <span>{index + 1}.</span>
+                            <span className="px-1 ">Adult</span>
+                          </div>
+                          <div className="justify-between flex">
+                            <div>
+                              <FormControl component="fieldset">
+                                <Controller
+                                  name={`adults.${index}.gender`}
+                                  control={control}
+                                  render={({ field }) => (
+                                    <RadioGroup {...field}>
+                                      <div>
+                                        <FormControlLabel
+                                          value={1}
+                                          control={<Radio size="small" />}
+                                          label="Male"
+                                        />
+                                        <FormControlLabel
+                                          value={2}
+                                          control={<Radio size="small" />}
+                                          label="Female"
+                                        />
+                                      </div>
+                                    </RadioGroup>
+                                  )}
+                                />
+                              </FormControl>
+                              {errors.adults?.[index]?.gender?.message && (
+                                <span className="text-red-600 text-xs mt-1 ml-4">
+                                  {errors.adults?.[index]?.gender?.message}
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="px-5">
@@ -221,9 +310,11 @@ export default function PassengerInformation() {
                             id="FirstName"
                             {...register(`adults.${index}.firstName` as const)}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.adults?.[index]?.firstName?.message}
-                          </p>
+                          {errors.adults?.[index]?.firstName?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.adults?.[index]?.firstName?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -246,41 +337,11 @@ export default function PassengerInformation() {
                             id="LastName"
                             {...register(`adults.${index}.lastName` as const)}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.adults?.[index]?.lastName?.message}
-                          </p>
-                        </div>
-                        <div className="mt-4 justify-between flex">
-                          <span className="self-center px-2 w-28">
-                            Gender :
-                          </span>
-                          <div>
-                            <FormControl component="fieldset">
-                              <Controller
-                                name={`adults.${index}.gender`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroup {...field}>
-                                    <div>
-                                      <FormControlLabel
-                                        value={1}
-                                        control={<Radio size="small" />}
-                                        label="Male"
-                                      />
-                                      <FormControlLabel
-                                        value={2}
-                                        control={<Radio size="small" />}
-                                        label="Female"
-                                      />
-                                    </div>
-                                  </RadioGroup>
-                                )}
-                              />
-                            </FormControl>
-                            <span className="text-red-600 text-xs mt-1 ml-4">
-                              {errors.adults?.[index]?.gender?.message}
-                            </span>
-                          </div>
+                          {errors.adults?.[index]?.lastName?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.adults?.[index]?.lastName?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -303,9 +364,11 @@ export default function PassengerInformation() {
                             id="nationalId"
                             {...register(`adults.${index}.nationalId` as const)}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.adults?.[index]?.nationalId?.message}
-                          </p>
+                          {errors.adults?.[index]?.nationalId?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.adults?.[index]?.nationalId?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -316,20 +379,41 @@ export default function PassengerInformation() {
                               Nationality
                             </label>
                           </div>
-                          <input
-                            className={clsx(
-                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
-                              {
-                                'border border-red-600':
-                                  errors.adults?.[index]?.firstName?.message,
-                              }
-                            )}
-                            type="text"
-                            id="Nationality"
-                            {...register(
-                              `adults.${index}.nationality` as const
-                            )}
-                          />
+                          <Box
+                            sx={{
+                              '.MuiOutlinedInput-root': {
+                                height: '32px',
+                                padding: '0',
+                                marginTop: '-2px',
+                              },
+                              '.MuiButtonBase-root': {
+                                marginTop: '2px',
+                              },
+                            }}
+                          >
+                            <SelectSearch
+                              loading={countriesLoading}
+                              className={clsx(
+                                'lg:w-10/12 w-full lg:h-8 rounded-lg border border-gray-400 outline-none mt-1',
+                                {
+                                  'border border-red-600':
+                                    errors.adults?.[index]?.nationality
+                                      ?.message,
+                                }
+                              )}
+                              control={control}
+                              name={`adults.${index}.nationality`}
+                              textSearched={adultCountrySearched}
+                              setTextSearched={setAdultCountrySearched}
+                              items={getCountriesData?.map(
+                                ({ title, countryCode }) => ({
+                                  iataCode: countryCode,
+                                  isCity: false,
+                                  label: title,
+                                })
+                              )}
+                            />
+                          </Box>
                           <p className="text-red-600 text-xs mt-1">
                             {errors.adults?.[index]?.nationality?.message}
                           </p>
@@ -358,9 +442,11 @@ export default function PassengerInformation() {
                               )}
                             />
                           </div>
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.adults?.[index]?.birthDate?.message}
-                          </p>
+                          {errors.adults?.[index]?.birthDate?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.adults?.[index]?.birthDate?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -386,9 +472,11 @@ export default function PassengerInformation() {
                               `adults.${index}.passportNumber` as const
                             )}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.adults?.[index]?.passportNumber?.message}
-                          </p>{' '}
+                          {errors.adults?.[index]?.passportNumber?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.adults?.[index]?.passportNumber?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -409,11 +497,12 @@ export default function PassengerInformation() {
                                   ref={datePickerRef}
                                   value={field.value}
                                   onChange={(value) => field.onChange(value)}
+                                  minDate={tomorrowDate}
                                 />
                               )}
                             />
                           </div>
-                          <p className="text-red-600 text-xs mt-1">
+                          <p className="text-red-600 text-xs mt-1 error">
                             {
                               errors.adults?.[index]?.passportExpiryDate
                                 ?.message
@@ -432,9 +521,40 @@ export default function PassengerInformation() {
                       key={id}
                     >
                       <div className=" items-center">
-                        <div className="border-b border-b-gray-200 pb-3 px-4">
-                          <span>{index + 1}.</span>
-                          <span className="px-1 ">Child</span>
+                        <div className="border-b border-b-gray-200 pb-3 px-4 flex justify-between">
+                          <div className="mt-1.5">
+                            <span>{index + 1}.</span>
+                            <span className="px-1 ">Child</span>
+                          </div>
+                          <div className="justify-between flex">
+                            <div>
+                              <FormControl component="fieldset">
+                                <Controller
+                                  name={`children.${index}.gender`}
+                                  control={control}
+                                  render={({ field }) => (
+                                    <RadioGroup {...field}>
+                                      <div>
+                                        <FormControlLabel
+                                          value={1}
+                                          control={<Radio size="small" />}
+                                          label="Male"
+                                        />
+                                        <FormControlLabel
+                                          value={2}
+                                          control={<Radio size="small" />}
+                                          label="Female"
+                                        />
+                                      </div>
+                                    </RadioGroup>
+                                  )}
+                                />
+                              </FormControl>
+                              <span className="text-red-600 text-xs mt-1 ml-4">
+                                {errors.children?.[index]?.gender?.message}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="px-5">
@@ -461,9 +581,11 @@ export default function PassengerInformation() {
                               `children.${index}.firstName` as const
                             )}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.children?.[index]?.firstName?.message}
-                          </p>
+                          {errors.children?.[index]?.firstName?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.children?.[index]?.firstName?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -486,41 +608,11 @@ export default function PassengerInformation() {
                             id="LastName"
                             {...register(`children.${index}.lastName` as const)}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.children?.[index]?.lastName?.message}
-                          </p>
-                        </div>
-                        <div className="mt-4 justify-between flex">
-                          <span className="self-center px-2 w-28">
-                            Gender :
-                          </span>
-                          <div>
-                            <FormControl component="fieldset">
-                              <Controller
-                                name={`children.${index}.gender`}
-                                control={control}
-                                render={({ field }) => (
-                                  <RadioGroup {...field}>
-                                    <div>
-                                      <FormControlLabel
-                                        value={1}
-                                        control={<Radio size="small" />}
-                                        label="Male"
-                                      />
-                                      <FormControlLabel
-                                        value={2}
-                                        control={<Radio size="small" />}
-                                        label="Female"
-                                      />
-                                    </div>
-                                  </RadioGroup>
-                                )}
-                              />
-                            </FormControl>
-                            <span className="text-red-600 text-xs mt-1 ml-4">
-                              {errors.children?.[index]?.gender?.message}
-                            </span>
-                          </div>
+                          {errors.children?.[index]?.lastName?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.children?.[index]?.lastName?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -545,9 +637,11 @@ export default function PassengerInformation() {
                               `children.${index}.nationalId` as const
                             )}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.children?.[index]?.nationalId?.message}
-                          </p>
+                          {errors.children?.[index]?.nationalId?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.children?.[index]?.nationalId?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -558,21 +652,41 @@ export default function PassengerInformation() {
                               Nationality
                             </label>
                           </div>
-                          <input
-                            className={clsx(
-                              'w-full border-gray-300 border rounded-md px-4 py-1 mt-2 bg-white',
-                              {
-                                'border border-red-600':
-                                  errors.children?.[index]?.nationality
-                                    ?.message,
-                              }
-                            )}
-                            type="text"
-                            id="Nationality"
-                            {...register(
-                              `children.${index}.nationality` as const
-                            )}
-                          />
+                          <Box
+                            sx={{
+                              '.MuiOutlinedInput-root': {
+                                height: '32px',
+                                padding: '0',
+                                marginTop: '-2px',
+                              },
+                              '.MuiButtonBase-root': {
+                                marginTop: '2px',
+                              },
+                            }}
+                          >
+                            <SelectSearch
+                              loading={countriesLoading}
+                              className={clsx(
+                                'lg:w-10/12 w-full lg:h-8 rounded-lg border border-gray-400 outline-none mt-1',
+                                {
+                                  'border border-red-600':
+                                    errors.children?.[index]?.nationality
+                                      ?.message,
+                                }
+                              )}
+                              control={control}
+                              name={`children.${index}.nationality`}
+                              textSearched={adultCountrySearched}
+                              setTextSearched={setAdultCountrySearched}
+                              items={getCountriesData?.map(
+                                ({ title, countryCode }) => ({
+                                  iataCode: countryCode,
+                                  isCity: false,
+                                  label: title,
+                                })
+                              )}
+                            />
+                          </Box>
                           <p className="text-red-600 text-xs mt-1">
                             {errors.children?.[index]?.nationality?.message}
                           </p>
@@ -601,9 +715,11 @@ export default function PassengerInformation() {
                               )}
                             />
                           </div>
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.children?.[index]?.birthDate?.message}
-                          </p>
+                          {errors.children?.[index]?.birthDate?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {errors.children?.[index]?.birthDate?.message}
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -629,9 +745,15 @@ export default function PassengerInformation() {
                               `children.${index}.passportNumber` as const
                             )}
                           />
-                          <p className="text-red-600 text-xs mt-1">
-                            {errors.children?.[index]?.passportNumber?.message}
-                          </p>{' '}
+                          {errors.children?.[index]?.passportNumber
+                            ?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {
+                                errors.children?.[index]?.passportNumber
+                                  ?.message
+                              }
+                            </p>
+                          )}
                         </div>
                         <div className="mt-5">
                           <div className="block">
@@ -652,16 +774,20 @@ export default function PassengerInformation() {
                                   ref={datePickerRef}
                                   value={field.value}
                                   onChange={(value) => field.onChange(value)}
+                                  minDate={tomorrowDate}
                                 />
                               )}
                             />
                           </div>
-                          <p className="text-red-600 text-xs mt-1">
-                            {
-                              errors.children?.[index]?.passportExpiryDate
-                                ?.message
-                            }
-                          </p>
+                          {errors.children?.[index]?.passportExpiryDate
+                            ?.message && (
+                            <p className="text-red-600 text-xs mt-1 error">
+                              {
+                                errors.children?.[index]?.passportExpiryDate
+                                  ?.message
+                              }
+                            </p>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -694,9 +820,11 @@ export default function PassengerInformation() {
                           defaultCountry="TR"
                           {...field}
                         />
-                        <span className="text-red-600 text-xs w-full text-center">
-                          {errors.contactInformation?.mobileNumber?.message}
-                        </span>
+                        {errors.contactInformation?.mobileNumber?.message && (
+                          <span className="text-red-600 text-xs w-full text-center error">
+                            {errors.contactInformation?.mobileNumber?.message}
+                          </span>
+                        )}
                       </>
                     )}
                   />
@@ -717,9 +845,11 @@ export default function PassengerInformation() {
                     placeholder="Enter Email Address"
                     {...register(`contactInformation.emailAddress`)}
                   />
-                  <span className="text-red-600 text-xs w-full text-center">
-                    {errors.contactInformation?.emailAddress?.message}
-                  </span>
+                  {errors.contactInformation?.emailAddress?.message && (
+                    <span className="text-red-600 text-xs w-full text-center">
+                      {errors.contactInformation?.emailAddress?.message}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -732,15 +862,29 @@ export default function PassengerInformation() {
             the passports of those travelling.
           </p>
           <div className="text-center pb-5">
-            <button
-              className="w-11/12 bg-[#F00] py-4 text-white rounded-lg"
-              type="submit"
-            >
-              Continue
-            </button>
+            {postAddToCardLoading ? (
+              <CircularProgress />
+            ) : (
+              <button
+                className="w-11/12 bg-[#F00] py-4 text-white rounded-lg"
+                type="submit"
+                onClick={scrollToFirstError}
+              >
+                Continue
+              </button>
+            )}
           </div>
         </div>
       </form>
+      <Modal
+        open={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        className="flex"
+      >
+        <div className="m-auto bg-white rounded-lg p-6">
+          <SingInUser inModal setModalIsOpen={setModalIsOpen} />
+        </div>
+      </Modal>
     </div>
   )
 }

@@ -1,39 +1,42 @@
-import {
-  AccountCircleOutlined,
-  BedOutlined,
-  FlightTakeoff,
-  MenuOutlined,
-} from '@mui/icons-material'
+import { BedOutlined, FlightTakeoff } from '@mui/icons-material'
+import clsx from 'clsx'
 import { useRouter } from 'next/router'
-import FinotixMobileLogo from '../../../../styles/images/finotixMobileLogo'
+import { HeaderMobile } from '../../header'
 
 export default function MainPageStaysMobile() {
-  const { push } = useRouter()
+  const { push, pathname } = useRouter()
 
   return (
     <>
-      <div className="pt-8 bg-[#F00]">
-        <div className="flex justify-between px-6">
-          <FinotixMobileLogo />
-          <div className="flex gap-4">
-            <AccountCircleOutlined htmlColor="white" fontSize="large" />
-            <MenuOutlined htmlColor="white" fontSize="large" />
-          </div>
-        </div>
-        <div className="mt-10 flex text-white w-full h-full">
+      <>
+        <HeaderMobile />
+        <div className="flex text-gray-900 w-full h-full bg-white">
           <div
-            className="flex gap-2 w-1/2 justify-center pb-4"
+            className={clsx(
+              'flex gap-2 w-1/2 justify-center py-4 border-b-4 ',
+              {
+                'border-b-[#F00]': pathname === '/',
+              }
+            )}
             onClick={() => push('/')}
           >
             <FlightTakeoff />
             <span>Flights</span>
           </div>
-          <div className="flex gap-2 w-1/2 justify-center pb-4 border-b-4 border-b-white">
+          {/* <div
+            className={clsx(
+              'flex gap-2 w-1/2 justify-center py-4 border-b-4 ',
+              {
+                'border-b-[#F00]': pathname === '/stays',
+              }
+            )}
+            onClick={() => push('/stays')}
+          >
             <BedOutlined />
             <span>Stays</span>
-          </div>
+          </div> */}
         </div>
-      </div>
+      </>
     </>
   )
 }

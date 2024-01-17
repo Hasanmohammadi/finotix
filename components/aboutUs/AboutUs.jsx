@@ -18,12 +18,8 @@ import { useTranslation } from 'next-i18next'
 const AboutUs = () => {
   const { t } = useTranslation('about-us')
 
-  console.log(
-    '🚀 ~ file: AboutUs.jsx:32 ~ AboutUs ~ t(aboutUsTittle)}:',
-    t('aboutUsTittle')
-  )
   return (
-    <>
+    <div className="bg-white">
       <div className="container">
         <section className="md:flex pt-10 md:pt-40 pb-4 md:pb-64 justify-center">
           <div className="w-full p-5 md:p-0 md:w-1/3">
@@ -137,7 +133,7 @@ const AboutUs = () => {
         </section>
       </div>
       <Footer />
-    </>
+    </div>
   )
 }
 

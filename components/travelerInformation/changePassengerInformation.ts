@@ -3,19 +3,21 @@ import { AdultInformationI } from './PassengerInformation'
 
 const changePassengerInformation = (
   data: AdultInformationI[],
-  startIndexForChild?: number
+  passengerTypeName?: 'child' | 'adult' | 'infant'
 ): PassengerI[] => {
-  return data.map((passenger, index) => ({
+  const passengerIndex = passengerTypeName === 'adult' ? 1 : 2
+  return data.map((passenger) => ({
     gender: +passenger.gender,
     firstName: passenger.firstName,
     lastName: passenger.lastName,
-    nationality: passenger.nationality,
+    //@ts-ignore
+    nationality: passenger.nationality.iataCode,
     birthDate: passenger.birthDate as string,
     passportId: passenger.passportNumber,
     passportExpireDate: passenger.passportExpiryDate as string,
-    parentIndex: 1,
-    passengerIndex: startIndexForChild || index,
-    passengerType: startIndexForChild ? 2 : 1,
+    parentIndex: passengerIndex - 1,
+    passengerIndex,
+    passengerType: passengerIndex,
     nationalId: passenger.nationalId,
   }))
 }

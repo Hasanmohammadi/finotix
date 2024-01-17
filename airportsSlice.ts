@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { DateI } from './components/flights/FlightSearch'
+import { PassengerInformationI } from './components/travelerInformation/PassengerInformation'
+import { todayDate } from './helper'
 import { RootState } from './store'
 import { PlacesI } from './types/basicInformation'
-import { todayDate } from './helper'
-import { DateI, DatesI } from './components/flights/FlightSearch'
 import {
   FrontDataLegI,
   FrontDataSearchResultI,
   GroupFareI,
 } from './types/search'
-import { PassengerInformationI } from './components/travelerInformation/PassengerInformation'
 
 export interface FlightInfoI {
   departureTime: string
@@ -27,6 +27,14 @@ export interface FlightInfoI {
   cabinClass: string
   legs: FrontDataLegI[]
 }
+
+export interface OpratorDetailI {
+  opratorCode: string
+  opratorName: string
+  countryCode: string
+  languageCode: string
+}
+
 export interface PriceSummaryI {
   pricePerAdult: number
 }
@@ -51,6 +59,14 @@ export interface AirportsState {
   currencyCode: string
   ticketsResult: FrontDataSearchResultI
   tripType: 'Round-trip' | 'One Way'
+  opratorDetails: OpratorDetailI[]
+  airlineSelectedFilter: string[]
+  departureStops: number[]
+  arrivalStops: number[]
+  filter: { name: string; orderByDesc: boolean }
+  priceFilter: number[]
+  resultLoading: boolean
+  lang: { [key: string]: string }
 }
 
 export interface PassengerCountI {
@@ -121,6 +137,14 @@ const initialState: AirportsState = {
   totalFareAmounts: [0, 1000],
   currencyCode: '',
   tripType: 'One Way',
+  opratorDetails: [],
+  airlineSelectedFilter: [],
+  departureStops: [],
+  arrivalStops: [],
+  filter: { name: 'OneAdultTotalFare', orderByDesc: false },
+  priceFilter: [],
+  resultLoading: false,
+  lang: {},
 }
 
 export const airportSlice = createSlice({
@@ -183,8 +207,37 @@ export const airportSlice = createSlice({
       state.ticketsResult = action.payload
     },
     setTripType: (state, action: PayloadAction<'Round-trip' | 'One Way'>) => {
-      console.log('🚀 ~ file: airportsSlice.ts:186 ~ action:', state.tripType)
       state.tripType = action.payload
+    },
+    setOpratorDetails: (state, action: PayloadAction<OpratorDetailI[]>) => {
+      state.opratorDetails = action.payload
+    },
+    setAirlineSelectedFilter: (state, action: PayloadAction<string[]>) => {
+      state.airlineSelectedFilter = action.payload
+    },
+    setDepartureStops: (state, action: PayloadAction<number[]>) => {
+      state.departureStops = action.payload
+    },
+    setArrivalStops: (state, action: PayloadAction<number[]>) => {
+      state.arrivalStops = action.payload
+    },
+    setFilter: (
+      state,
+      action: PayloadAction<{
+        name: string
+        orderByDesc: boolean
+      }>
+    ) => {
+      state.filter = action.payload
+    },
+    setPriceFilter: (state, action: PayloadAction<number[]>) => {
+      state.priceFilter = action.payload
+    },
+    setResultLoading: (state, action: PayloadAction<boolean>) => {
+      state.resultLoading = action.payload
+    },
+    setLang: (state, action: PayloadAction<{ [key: string]: string }>) => {
+      state.lang = action.payload
     },
   },
 })
@@ -205,9 +258,16 @@ export const {
   setCurrencyCode,
   setTicketsResult,
   setTripType,
+  setOpratorDetails,
+  setAirlineSelectedFilter,
+  setDepartureStops,
+  setArrivalStops,
+  setFilter,
+  setPriceFilter,
+  setResultLoading,
+  setLang,
 } = airportSlice.actions
 
-// Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.airportsInfo
 
 export default airportSlice.reducer

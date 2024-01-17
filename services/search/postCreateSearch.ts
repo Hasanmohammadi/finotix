@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { SEARCH_URLS } from '../../constants/urls'
+import { axiosInstance } from '../../pages/_app'
 import { ApiResponseI } from '../../types/general'
 import { PostCreateSearchResultI } from '../../types/search'
 
@@ -18,12 +18,11 @@ export interface CreateSearchArgsI {
 }
 
 const postCreateSearch = async (createSearchInfo: CreateSearchArgsI) => {
-  const response = await axios.post<ApiResponseI<PostCreateSearchResultI>>(
-    SEARCH_URLS.POST_CREATE_SEARCH,
-    {
-      ...createSearchInfo,
-    }
-  )
+  const response = await axiosInstance.post<
+    ApiResponseI<PostCreateSearchResultI>
+  >(SEARCH_URLS.POST_CREATE_SEARCH, {
+    ...createSearchInfo,
+  })
 
   return response?.data?.result
 }

@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { SEARCH_URLS } from '../../constants/urls'
+import { axiosInstance } from '../../pages/_app'
 import { ApiResponseI } from '../../types/general'
 import { PostPriceDetailsResultI } from '../../types/search'
 
@@ -12,13 +12,12 @@ const postPriceDetails = async ({
   flightIds,
   searchId,
 }: PostPriceDetailsArgsI) => {
-  const response = await axios.post<ApiResponseI<PostPriceDetailsResultI>>(
-    SEARCH_URLS.POST_PRICE_DETAILS,
-    {
-      searchId,
-      flightIds,
-    }
-  )
+  const response = await axiosInstance.post<
+    ApiResponseI<PostPriceDetailsResultI>
+  >(SEARCH_URLS.POST_PRICE_DETAILS, {
+    searchId,
+    flightIds,
+  })
   return response?.data?.result
 }
 

@@ -2,6 +2,7 @@ import { KeyboardArrowLeft } from '@mui/icons-material'
 import { useRouter } from 'next/router'
 import TravelInfoMobile from './components/TravelInfoMobile'
 import PassengerInformation from './components/PassengerInformation'
+import SidebarMenu from '../header/components/SidebarMenu'
 
 export default function TravelInformationMobile() {
   const router = useRouter()
@@ -16,7 +17,9 @@ export default function TravelInformationMobile() {
             onClick={() => router.back()}
           />
           <p className="w-3/5 text-center">Traveler Information</p>
-          <div className="w-[19%]"> </div>
+          <div className="w-[19%]">
+            <SidebarMenu />
+          </div>
         </div>
       </div>
       <TravelInfoMobile />

@@ -164,7 +164,11 @@ export default function TicketsResult({
         </div>
         <div className="w-24 text-center">
           <p className="font-normal text-xs text-gray-600">
-            {departureFlight?.stops} stops
+            {departureFlight.stops
+              ? `${departureFlight.stops} ${
+                  departureFlight.stops > 1 ? 'Stops' : 'Stop'
+                }`
+              : 'Non-Stop'}
           </p>
           <p>
             {departureFlight?.legs.map(({ departureAirport }, index) => {
@@ -251,7 +255,11 @@ export default function TicketsResult({
           </div>
           <div className="w-24 text-center">
             <p className="font-normal text-xs text-gray-600">
-              {returnFlight?.stops} stops
+              {returnFlight.stops
+                ? `${returnFlight.stops} ${
+                    returnFlight.stops > 1 ? 'Stops' : 'Stop'
+                  }`
+                : 'Non-Stop'}
             </p>
             <p>
               {returnFlight?.legs.map(({ departureAirport }, index) => {
@@ -270,7 +278,6 @@ export default function TicketsResult({
             <SuitcaseOutline />
             <div>
               <p className="font-normal text-xs text-gray-600">
-                {' '}
                 {returnFlight?.legs?.[0].baggageItems?.[0].displayText_Short}
               </p>
             </div>

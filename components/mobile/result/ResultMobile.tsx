@@ -9,30 +9,73 @@ import TopBarMobile from './components/TopBarMobile'
 import { useRouter } from 'next/router'
 import { setCurrencyCode } from '../../../airportsSlice'
 import { useDispatch } from 'react-redux'
+import SidebarMenu from '../header/components/SidebarMenu'
+import ExpireTimeResult from '../../results/ExpireTimeResult'
+import TicketCardLoading from '../../results/TicketCardLoading'
+import EmptyState from '../../results/EmptyState'
 
 interface ResultMobilePropsI {
   searchResultData: FrontDataSearchResultI
   postSearchResultLoading: boolean
   data: FrontDataSearchResultI
+  searchResultStatus: 'error' | 'idle' | 'loading' | 'success'
+  remainingData: number
 }
 export default function ResultMobile({
   searchResultData,
   postSearchResultLoading,
   data,
+  searchResultStatus,
+  remainingData,
 }: ResultMobilePropsI) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [searchIdExpire, setSearchIdExpire] = useState(false)
+
   const { push } = useRouter()
 
-  const { passengerCount, destination, origin, departureDate, returnDate } =
-    useAppSelector((state) => state.airportsInfo)
+  const {
+    passengerCount,
+    destination,
+    origin,
+    departureDate,
+    returnDate,
+    tripType,
+    resultLoading,
+  } = useAppSelector((state) => state.airportsInfo)
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(setCurrencyCode(data?.flightGroups?.[0]?.currencyCode))
   }, [data?.flightGroups?.[0]?.currencyCode])
 
+  const checkExpiration = () => {
+    const savedData = localStorage.getItem('finotixSearchIdTime')
+    if (savedData) {
+      const timestamp = JSON.parse(savedData)
+
+      const currentTime = new Date().getTime()
+      const elapsedMinutes = (currentTime - timestamp) / (1000 * 60)
+
+      if (elapsedMinutes >= 9) {
+        setSearchIdExpire(true)
+        localStorage.removeItem('finotixSearchIdTime')
+      }
+    }
+  }
+
+  useEffect(() => {
+    const expirationInterval = setInterval(() => {
+      checkExpiration()
+    }, 60 * 100)
+
+    return () => clearInterval(expirationInterval)
+  }, [])
+
   return (
     <>
+      {searchIdExpire && (
+        <ExpireTimeResult setSearchIdExpire={setSearchIdExpire} />
+      )}
       <div className="w-full relative h-1/6 bg-[#F00] text-white py-8">
         <div className="flex items-center justify-between">
           <KeyboardArrowLeft
@@ -42,8 +85,8 @@ export default function ResultMobile({
           />
           <div className="w-3/5">
             <div className="flex justify-center">
-              <p>{origin.title.slice(0, 10)}...</p> <p className="mx-1">-</p>{' '}
-              <p>{destination.title.slice(0, 10)}...</p>
+              <p>{origin.iataCode}</p> <p className="mx-1">to</p>{' '}
+              <p>{destination.iataCode}</p>
             </div>
             <div className="flex justify-center ">
               {!!departureDate.day && (
@@ -57,7 +100,7 @@ export default function ResultMobile({
                   {departureDate.year}
                 </p>
               )}
-              {!!returnDate?.day && (
+              {tripType === 'Round-trip' && (
                 <>
                   <span className="px-2">~</span>
                   <p>
@@ -85,7 +128,9 @@ export default function ResultMobile({
               )}
             </div>
           </div>
-          <div className="w-[19%]"> </div>
+          <div className="w-[19%]">
+            <SidebarMenu />
+          </div>
         </div>
         <TopBarMobile />
       </div>
@@ -94,32 +139,54 @@ export default function ResultMobile({
       ) : ( */}
       <>
         <div className="flex items-center flex-col pt-5">
-          {data?.flightGroups?.map(
-            ({
-              flights,
-              groupFares,
-              groupId,
-              id,
-              currencyCode,
-              oneAdultTotalFare,
-              totalFareAmount,
-            }) => (
-              <TicketCardMobile
-                departureFlight={flights[0]}
-                currencyCode={currencyCode}
-                returnFlight={flights[1]}
-                groupFares={groupFares}
-                groupId={groupId}
-                id={id}
-                passengersCount={{
-                  adult: searchResultData?.travelerAvailAdultCount,
-                  child: searchResultData?.travelerAvailChildCount,
-                  infant: searchResultData?.travelerAvailInfantCount,
-                }}
-                oneAdultTotalFare={oneAdultTotalFare}
-                totalFareAmount={totalFareAmount}
-              />
-            )
+          {!resultLoading &&
+            data?.flightGroups?.map(
+              ({
+                flights,
+                groupFares,
+                groupId,
+                id,
+                currencyCode,
+                oneAdultTotalFare,
+                totalFareAmount,
+              }) => (
+                <TicketCardMobile
+                  departureFlight={flights[0]}
+                  currencyCode={currencyCode}
+                  returnFlight={flights[1]}
+                  groupFares={groupFares}
+                  groupId={groupId}
+                  id={id}
+                  passengersCount={{
+                    adult: searchResultData?.travelerAvailAdultCount,
+                    child: searchResultData?.travelerAvailChildCount,
+                    infant: searchResultData?.travelerAvailInfantCount,
+                  }}
+                  oneAdultTotalFare={oneAdultTotalFare}
+                  totalFareAmount={totalFareAmount}
+                />
+              )
+            )}
+
+          {resultLoading ? (
+            <>
+              <TicketCardLoading />
+              <TicketCardLoading />
+              <TicketCardLoading />
+              <TicketCardLoading />
+            </>
+          ) : searchResultStatus === 'error' ? (
+            <EmptyState />
+          ) : (
+            <>
+              {!!(remainingData <= 0) &&
+                !resultLoading &&
+                !!data?.flightGroups?.length && (
+                  <div className="flex justify-center mt-10">
+                    <p>No more result found !</p>
+                  </div>
+                )}
+            </>
           )}
         </div>
         <button

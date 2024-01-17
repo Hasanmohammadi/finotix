@@ -6,10 +6,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'
 import FlightLandIcon from '@mui/icons-material/FlightLand'
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff'
-import { autocompleteClasses } from '@mui/material/Autocomplete'
 import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
-import { createTheme, styled } from '@mui/material/styles'
 import { useTranslation } from 'next-i18next'
 import { useForm } from 'react-hook-form'
 import DatePicker from 'react-multi-date-picker'
@@ -48,6 +46,7 @@ import '../DatesConvert/DateConverterToJalali'
 import '../DatesConvert/JalaliDateConverterToGeorgian'
 import '../DatesConvert/toEnglishDigits'
 import SelectSearch from '../SelectSearch'
+import Toolbar from 'react-multi-date-picker/plugins/toolbar'
 
 interface DateInput {
   year: number
@@ -67,7 +66,7 @@ function formatDate({ year, month, day }: DateInput) {
 const today = new Date()
 
 const year = today.getFullYear()
-const month = String(today.getMonth() + 1).padStart(2, '0') // Months are zero-based, so we add 1 and format it.
+const month = String(today.getMonth() + 1).padStart(2, '0')
 const day = String(today.getDate()).padStart(2, '0')
 
 const todayDate = `${year}-${month}-${day}`
@@ -98,20 +97,18 @@ interface FlightSearchPropsI {
     CreateSearchArgsI,
     unknown
   >
-  postCreateSearchLoading: boolean
   onSearchClick?: () => void
   isStickyPosition?: boolean
 }
 
 export default function FlightSearch({
   postCreateSearchAction,
-  postCreateSearchLoading,
   onSearchClick,
   isStickyPosition,
 }: FlightSearchPropsI) {
   const { t } = useTranslation('main-page')
 
-  const { pathname, route } = useRouter()
+  const { pathname } = useRouter()
   const dispatch = useAppDispatch()
   const {
     passengerCount,
@@ -120,6 +117,7 @@ export default function FlightSearch({
     departureDate,
     returnDate,
     tripType,
+    resultLoading,
   } = useAppSelector((state) => state.airportsInfo)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -130,6 +128,7 @@ export default function FlightSearch({
   const [airplaneClass, setAirplaneClass] = useState('ECONOMY')
   const [origin, setOrigin] = useState('')
   const [destination, setDestination] = useState('')
+  const [datePickerIsOpen, setDatePickerIsOpen] = useState(false)
   const [adult, setAdult] = useState(passengerCount.adult || 1)
   const [children, setChildren] = useState(passengerCount.child)
   const [infants, setInfants] = useState(passengerCount.infant)
@@ -212,6 +211,9 @@ export default function FlightSearch({
   }
   type DatePickerType = typeof DatePicker
   const datePickerRef = useRef<{ openCalendar: () => void } | null>(null)
+  const datePickerDepartureRef = useRef<{ openCalendar: () => void } | null>(
+    null
+  )
 
   function handleReturnDate(data: any[]) {
     setReturnDateInput({
@@ -283,18 +285,16 @@ export default function FlightSearch({
 
   useEffect(() => {
     dispatch(setTripType(wayTrip))
-    if (wayTrip === 'Round-trip' && !route.includes('/result')) {
-      datePickerRef?.current?.openCalendar()
-    }
   }, [wayTrip])
 
-  const depDate = new Date(
-    departureDateInput.year,
-    departureDateInput.month - 1,
-    departureDateInput.day
-  )
+  useEffect(() => {
+    if (infants > adult) {
+      setInfants(adult)
+    }
+  }, [adult, infants])
+
   return (
-    <div className={clsx({ 'py-4': isStickyPosition })}>
+    <div className={clsx({ 'pb-4 pt-7': isStickyPosition })}>
       <div
         className={clsx(
           'flex h-10 w-32 transition-height duration-300 ease-in-out',
@@ -402,17 +402,25 @@ export default function FlightSearch({
               </div>
             </div>
           </div>
-          <div className="flex w-1/3 gap-2">
-            <div className="flex border custom-border bg-white w-1/2">
-              <div className="self-center px-2">
+          <div className="flex w-1/3 gap-2 cursor-pointer">
+            <div className="flex border custom-border bg-white w-1/2 cursor-pointer">
+              <div
+                className="self-center px-2"
+                onClick={() => datePickerDepartureRef.current?.openCalendar()}
+              >
                 <CalendarMonthIcon />
               </div>
               <div className="w-full inline-grid self-center">
-                <label className="text-justify text-sm" htmlFor="date-picker">
+                <label
+                  className="text-justify text-sm cursor-pointer"
+                  htmlFor="date-picker"
+                  onClick={() => datePickerDepartureRef.current?.openCalendar()}
+                >
                   {t('departureDate')}
                 </label>
 
                 <DatePicker
+                  plugins={[<Toolbar position="bottom" />]}
                   minDate={todayDate}
                   value={
                     new Date(
@@ -421,6 +429,7 @@ export default function FlightSearch({
                       departureDateInput.day
                     )
                   }
+                  ref={datePickerDepartureRef}
                   onChange={handleDepartureDate}
                   numberOfMonths={1}
                   inputMode="text"
@@ -443,98 +452,126 @@ export default function FlightSearch({
                 />
               </div>
             </div>
-            <div
-              className={clsx('flex border custom-border bg-white w-1/2', {
-                'text-gray-300 cursor-pointer': wayTrip === 'One Way',
-              })}
-              onClick={() => {
-                setWayTrip('Round-trip')
-              }}
-            >
-              <div
-                className="self-center px-2"
-                onClick={() => {
-                  setWayTrip('Round-trip')
+            <div className=" w-1/2 relative">
+              <input
+                className="absolute right-4 top-6 w-4 h-4 cursor-pointer"
+                type="checkbox"
+                checked={wayTrip === 'Round-trip'}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setWayTrip('Round-trip')
+                  } else {
+                    setWayTrip('One Way')
+                  }
                 }}
-              >
-                <CalendarMonthIcon />
-              </div>
+              />
+
               <div
-                className="w-full inline-grid self-center"
-                onClick={() => {
-                  setWayTrip('Round-trip')
-                }}
+                className={clsx('flex border custom-border bg-white', {
+                  'text-gray-300 cursor-pointer': wayTrip === 'One Way',
+                })}
               >
-                <label
-                  className="text-justify text-sm"
-                  htmlFor="date-picker"
+                <div
+                  className="self-center px-2"
                   onClick={() => {
                     setWayTrip('Round-trip')
+                    setTimeout(() => {
+                      if (!datePickerIsOpen) {
+                        datePickerRef?.current?.openCalendar()
+                      }
+                    }, 0)
                   }}
                 >
-                  {t('returnDate')}
-                </label>
+                  <CalendarMonthIcon />
+                </div>
+                <div className="w-full inline-grid self-center">
+                  <label
+                    className="text-justify text-sm"
+                    htmlFor="date-picker"
+                    onClick={() => {
+                      setWayTrip('Round-trip')
+                      setTimeout(() => {
+                        if (!datePickerIsOpen) {
+                          datePickerRef?.current?.openCalendar()
+                        }
+                      }, 0)
+                    }}
+                  >
+                    {t('returnDate')}
+                  </label>
 
-                {wayTrip === 'One Way' ? (
-                  <p className="mr-20 text-sm">
-                    {returnDate.day
-                      ? `${returnDate.year}/${returnDate.month}/${returnDate.day}`
-                      : `${departureDate.year}/${departureDate.month}/${departureDate.day}`}
-                  </p>
-                ) : (
-                  <DatePicker
-                    minDate={`${departureDate.year}-${departureDate.month}-${departureDate.day}`}
-                    ref={datePickerRef}
-                    render={() => (
-                      <div
-                        className="cursor-pointer text-start"
-                        onClick={() => datePickerRef?.current?.openCalendar()}
-                      >
-                        {returnDate.day
-                          ? `${returnDate.year}/${returnDate.month}/${returnDate.day}`
-                          : `${departureDate.year}/${departureDate.month}/${departureDate.day}`}{' '}
-                      </div>
-                    )}
-                    value={[
-                      new Date(
-                        departureDateInput.year,
-                        departureDateInput.month - 1,
-                        departureDateInput.day
-                      ),
-                      new Date(
-                        returnDate.year,
-                        returnDate.month - 1,
-                        returnDate.day
-                      ),
-                    ]}
-                    onChange={handleReturnDate}
-                    numberOfMonths={1}
-                    inputMode="text"
-                    range
-                    placeholder={t('dateHitPoint')}
-                    calendar={
-                      pathname && pathname === '/fa'
-                        ? persian
-                        : pathname && pathname === '/ar'
-                        ? arabic
-                        : gregorian
-                    }
-                    locale={
-                      pathname && pathname === '/fa'
-                        ? persian_fa
-                        : pathname && pathname === '/ar'
-                        ? arabic_ar
-                        : gregorian_en
-                    }
-                  />
-                )}
+                  {wayTrip === 'One Way' ? (
+                    <p
+                      className="text-start text-sm w-full"
+                      onClick={() => {
+                        setWayTrip('Round-trip')
+                        setTimeout(() => {
+                          if (!datePickerIsOpen) {
+                            datePickerRef?.current?.openCalendar()
+                          }
+                        }, 0)
+                      }}
+                    >
+                      {returnDate.day
+                        ? `${returnDate.year}/${returnDate.month}/${returnDate.day}`
+                        : `${departureDate.year}/${departureDate.month}/${departureDate.day}`}
+                    </p>
+                  ) : (
+                    <DatePicker
+                      plugins={[<Toolbar position="bottom" />]}
+                      minDate={`${departureDate.year}-${departureDate.month}-${departureDate.day}`}
+                      ref={datePickerRef}
+                      render={() => (
+                        <div
+                          className="cursor-pointer text-start"
+                          onClick={() => datePickerRef?.current?.openCalendar()}
+                        >
+                          {returnDate.day
+                            ? `${returnDate.year}/${returnDate.month}/${returnDate.day}`
+                            : `${departureDate.year}/${departureDate.month}/${departureDate.day}`}{' '}
+                        </div>
+                      )}
+                      value={[
+                        new Date(
+                          departureDateInput.year,
+                          departureDateInput.month - 1,
+                          departureDateInput.day
+                        ),
+                        new Date(
+                          returnDate.year,
+                          returnDate.month - 1,
+                          returnDate.day
+                        ),
+                      ]}
+                      onChange={handleReturnDate}
+                      numberOfMonths={1}
+                      inputMode="text"
+                      range
+                      placeholder={t('dateHitPoint')}
+                      calendar={
+                        pathname && pathname === '/fa'
+                          ? persian
+                          : pathname && pathname === '/ar'
+                          ? arabic
+                          : gregorian
+                      }
+                      locale={
+                        pathname && pathname === '/fa'
+                          ? persian_fa
+                          : pathname && pathname === '/ar'
+                          ? arabic_ar
+                          : gregorian_en
+                      }
+                      onOpen={() => setDatePickerIsOpen(false)}
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>
           <div className="flex w-[21%] justify-between">
-            <div>
+            <div className=" h-[58px] rounded-lg">
               <Button
-                // theme={theme}
                 className="black transform-none"
                 id="basic-button"
                 aria-controls={!!anchorEl ? 'basic-menu' : undefined}
@@ -542,14 +579,7 @@ export default function FlightSearch({
                 aria-expanded={!!anchorEl ? 'true' : undefined}
                 onClick={(e: any) => setAnchorEl(e.currentTarget)}
               >
-                {/* <div className="flex flex-col">
-                  <p className="light-gray">{`Adult ${adult}`}</p>
-                  {!!children && (
-                    <p className="light-gray">Children {children}</p>
-                  )}
-                  {!!infants && <p className="light-gray">Infants {infants}</p>}
-                </div> */}
-                <div className="">
+                <div>
                   <p className="light-gray">
                     {adult + children + infants} <br />
                     {adult + children + infants > 1
@@ -575,16 +605,18 @@ export default function FlightSearch({
                 <div className="passenger-select-container">
                   <div className="columns-2">
                     <div className="w-full">
-                      {/*TODO: change Adult with i18n for multi language pages*/}
                       <p className="px-3">Adult</p>
                     </div>
                     <div className="passenger-numbers">
                       <div>
                         <button
-                          className="btn-change-value dec"
+                          className={clsx('btn-change-value dec', {
+                            'opacity-30': adult <= 1,
+                          })}
                           onClick={() => {
                             if (adult > 1) setAdult((pre) => pre - 1)
                           }}
+                          disabled={adult <= 1}
                         >
                           -
                         </button>
@@ -656,12 +688,15 @@ export default function FlightSearch({
                       </div>
                       <div>
                         <button
-                          className="btn-change-value"
                           onClick={() => {
                             if (infants >= 0) {
                               setInfants((pre) => pre + 1)
                             }
                           }}
+                          className={clsx('btn-change-value', {
+                            'opacity-30': adult <= infants,
+                          })}
+                          disabled={adult <= infants}
                         >
                           +
                         </button>
@@ -671,13 +706,23 @@ export default function FlightSearch({
                 </div>
               </Menu>
             </div>
-            {postCreateSearchLoading ? (
-              <CircularProgress className="mt-2" />
-            ) : (
+            {resultLoading ? (
+              <div className="flex justify-center w-full">
+                <CircularProgress className="mt-2 ml-2" />
+              </div>
+            ) : originAirport.iataCode && destinationAirport.iataCode ? (
               <button
                 className="search-btn"
                 onClick={onSearch}
-                disabled={postCreateSearchLoading}
+                disabled={resultLoading}
+              >
+                {t('search')}
+              </button>
+            ) : (
+              <button
+                className="py-4 px-8 h-14 font-black shadow-md bg-gray-200 text-white rounded-[10px]"
+                onClick={onSearch}
+                disabled
               >
                 {t('search')}
               </button>

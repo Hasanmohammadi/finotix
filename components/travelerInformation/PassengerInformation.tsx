@@ -3,39 +3,51 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import clsx from 'clsx'
-import { useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
+import { useEffect, useRef, useState } from 'react'
 import DateObject from 'react-date-object'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import DatePicker from 'react-multi-date-picker'
 import PhoneInput, { parsePhoneNumber } from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
-import { useAppSelector } from '../../hooks'
-import styles from './travelerInformation.module.css'
-import convertDateObjectFormatToSimpleString from '../../helper/date/convertDateObjectFormatToSimpleString'
 import { useDispatch } from 'react-redux'
-import { setInvoiceCode, setPassengersInfo } from '../../airportsSlice'
-import { useRouter } from 'next/router'
-import ConfirmInformation from './ConfirmInformation'
+import { setInvoiceCode } from '../../airportsSlice'
+import convertDateObjectFormatToSimpleString from '../../helper/date/convertDateObjectFormatToSimpleString'
+import { useAppSelector } from '../../hooks'
 import { usePostAddToCard } from '../../hooks/search'
+import ConfirmInformation from './ConfirmInformation'
 import changePassengerInformation from './changePassengerInformation'
-import { CircularProgress } from '@mui/material'
+import styles from './travelerInformation.module.css'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import { Modal } from '@material-ui/core'
+import { Box, CircularProgress } from '@mui/material'
+import Cookies from 'js-cookie'
 import * as yup from 'yup'
+import SingInUser from '../../components/singIn/SingInUser'
+import useGetCountry from '../../hooks/country'
+import { useGetProfileInformation } from '../../hooks/profile'
+import SelectSearch from '../SelectSearch'
 
-const today = new Date()
+const currentDate = new Date()
 
-const year = today.getFullYear()
-const month = String(today.getMonth() + 1).padStart(2, '0') // Months are zero-based, so we add 1 and format it.
-const day = String(today.getDate()).padStart(2, '0')
+currentDate.setDate(currentDate.getDate() + 1)
 
-const todayDate = `${year}-${month}-${day}`
+const tomorrowDate = currentDate.toISOString().split('T')[0]
 
 const adultInformationSchema = yup.object().shape({
   firstName: yup.string().required('First Name is required !'),
   lastName: yup.string().required('Last Name is required !'),
-  nationality: yup.string().required('Nationality is required !'),
+  nationality: yup
+    .object()
+    .shape({
+      id: yup.string(),
+      label: yup.string(),
+      isCity: yup.boolean(),
+    })
+    .required('Nationality is required !')
+    .typeError('Search Country Name'),
   nationalId: yup.string().required('National ID is required !'),
   birthDate: yup.mixed().required('Birth Date is required !'), // Accepts both string and Date
   passportNumber: yup.string().required('Passport Number is required !'),
@@ -81,20 +93,28 @@ export interface PassengerInformationI {
 
 const PassengerInformation = () => {
   const datePickerRef = useRef(null)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
 
-  const { fare, passengersInfo, priceDetailIds } = useAppSelector(
-    (state) => state.airportsInfo
-  )
+  const { fare, priceDetailIds } = useAppSelector((state) => state.airportsInfo)
   const dispatch = useDispatch()
+
+  const { getProfileInfoData, profileInfoAction } = useGetProfileInformation()
+
+  useEffect(() => {
+    profileInfoAction()
+  }, [Cookies.get('userTokenFinotix')])
+
   const {
     control,
     handleSubmit,
     register,
     formState: { errors },
-    watch,
   } = useForm<PassengerInformationI>({
     defaultValues: {
-      contactInformation: { emailAddress: '', mobileNumber: '' },
+      contactInformation: {
+        emailAddress: getProfileInfoData?.emailAddress,
+        mobileNumber: getProfileInfoData?.mobileNo,
+      },
       adults: [],
       children: [],
     },
@@ -115,14 +135,14 @@ const PassengerInformation = () => {
     })
 
   useEffect(() => {
-    if (fare?.groupFareI[0]?.quantity) {
-      ;[...Array(fare?.groupFareI[0]?.quantity)].map(() => {
-        return adultAppend({
+    if (fare?.groupFareI[1]?.quantity) {
+      ;[...Array(fare?.groupFareI[1]?.quantity)].map(() => {
+        return childAppend({
           firstName: '',
           lastName: '',
-          birthDate: '2000-01-01',
+          birthDate: '2012-01-01',
           nationality: '',
-          passportExpiryDate: todayDate,
+          passportExpiryDate: tomorrowDate,
           passportNumber: '',
           nationalId: '',
           gender: 1,
@@ -132,14 +152,14 @@ const PassengerInformation = () => {
   }, [])
 
   useEffect(() => {
-    if (fare?.groupFareI[1]?.quantity) {
-      ;[...Array(fare?.groupFareI[1]?.quantity)].map(() => {
-        return childAppend({
+    if (fare?.groupFareI[0]?.quantity) {
+      ;[...Array(fare?.groupFareI[0]?.quantity)].map(() => {
+        return adultAppend({
           firstName: '',
           lastName: '',
-          birthDate: '2012-01-01',
+          birthDate: '2000-01-01',
           nationality: '',
-          passportExpiryDate: todayDate,
+          passportExpiryDate: tomorrowDate,
           passportNumber: '',
           nationalId: '',
           gender: 1,
@@ -150,42 +170,6 @@ const PassengerInformation = () => {
 
   const { push, asPath } = useRouter()
 
-  const onSubmit = (data: PassengerInformationI) => {
-    dispatch(
-      setPassengersInfo({
-        adults: data.adults
-          .map((adult) => ({
-            ...adult,
-            birthDate: convertDateObjectFormatToSimpleString(
-              adult?.birthDate as DateObject
-            ),
-            passportExpiryDate: convertDateObjectFormatToSimpleString(
-              adult?.passportExpiryDate as DateObject
-            ),
-          }))
-          .filter(({ firstName }) => !!firstName),
-        children: data.children
-          .map((child) => ({
-            ...child,
-            birthDate: convertDateObjectFormatToSimpleString(
-              child?.birthDate as DateObject
-            ),
-            passportExpiryDate: convertDateObjectFormatToSimpleString(
-              child?.passportExpiryDate as DateObject
-            ),
-          }))
-          .filter(({ firstName }) => !!firstName),
-        contactInformation: data.contactInformation,
-      })
-    )
-
-    push('travel-Information', {
-      query: {
-        role: 'preview',
-      },
-    })
-  }
-
   const { postAddToCardAction, postAddToCardLoading } = usePostAddToCard({
     onSuccess: ({ invoiceCode }) => {
       dispatch(setInvoiceCode(invoiceCode))
@@ -194,55 +178,80 @@ const PassengerInformation = () => {
   })
 
   const onConfirm = (data: PassengerInformationI) => {
-    const adultsInfo = changePassengerInformation(
-      data.adults
-        .map((adult) => ({
-          ...adult,
-          birthDate: convertDateObjectFormatToSimpleString(
-            adult?.birthDate as DateObject
-          ),
-          passportExpiryDate: convertDateObjectFormatToSimpleString(
-            adult?.passportExpiryDate as DateObject
-          ),
-        }))
-        .filter(({ firstName }) => !!firstName)
-    )
-    const childrenInfo = data?.children.length
-      ? changePassengerInformation(
-          data.children
-            .map((child) => ({
-              ...child,
-              birthDate: convertDateObjectFormatToSimpleString(
-                child?.birthDate as DateObject
-              ),
-              passportExpiryDate: convertDateObjectFormatToSimpleString(
-                child?.passportExpiryDate as DateObject
-              ),
-            }))
-            .filter(({ firstName }) => !!firstName),
-          data?.adults.length - 1
-        )
-      : []
+    if (Cookies.get('userTokenFinotix')) {
+      const adultsInfo = changePassengerInformation(
+        data.adults
+          .map((adult) => ({
+            ...adult,
+            birthDate:
+              typeof adult?.birthDate === 'string'
+                ? adult?.birthDate
+                : convertDateObjectFormatToSimpleString(
+                    adult?.birthDate as DateObject
+                  ),
+            passportExpiryDate:
+              typeof adult?.passportExpiryDate === 'string'
+                ? adult?.passportExpiryDate
+                : convertDateObjectFormatToSimpleString(
+                    adult?.passportExpiryDate as DateObject
+                  ),
+          }))
+          .filter(({ firstName }) => !!firstName),
+        'adult'
+      )
+      const childrenInfo = data?.children.length
+        ? changePassengerInformation(
+            data.children
+              .map((child) => ({
+                ...child,
+                birthDate:
+                  typeof child?.birthDate === 'string'
+                    ? child?.birthDate
+                    : convertDateObjectFormatToSimpleString(
+                        child?.birthDate as DateObject
+                      ),
+                passportExpiryDate:
+                  typeof child?.passportExpiryDate === 'string'
+                    ? child?.passportExpiryDate
+                    : convertDateObjectFormatToSimpleString(
+                        child?.passportExpiryDate as DateObject
+                      ),
+              }))
+              .filter(({ firstName }) => !!firstName),
+            'child'
+          )
+        : []
 
-    postAddToCardAction({
-      searchId: localStorage.getItem('searchId') as string,
-      passengersInfo: {
-        emailAddess: data?.contactInformation?.emailAddress,
-        telephoneNo: data?.contactInformation?.mobileNumber,
-        mobileNo: {
-          cellPhoneNumber: parsePhoneNumber(
-            data?.contactInformation?.mobileNumber
-          )?.nationalNumber as string,
-          countryCode: `+${
-            parsePhoneNumber(data?.contactInformation?.mobileNumber)
-              ?.countryCallingCode as string
-          }`,
+      postAddToCardAction({
+        searchId: localStorage.getItem('searchId') as string,
+        passengersInfo: {
+          emailAddess: data?.contactInformation?.emailAddress,
+          telephoneNo: data?.contactInformation?.mobileNumber,
+          mobileNo: {
+            cellPhoneNumber: parsePhoneNumber(
+              data?.contactInformation?.mobileNumber
+            )?.nationalNumber as string,
+            countryCode: `+${
+              parsePhoneNumber(data?.contactInformation?.mobileNumber)
+                ?.countryCallingCode as string
+            }`,
+          },
+          passengers: [...adultsInfo, ...childrenInfo],
         },
-        passengers: [...adultsInfo, ...childrenInfo],
-      },
-      priceDetailIds,
-    })
+        priceDetailIds,
+      })
+    } else {
+      setModalIsOpen(true)
+    }
   }
+
+  const [adultCountrySearched, setAdultCountrySearched] = useState<string>('')
+
+  const { countriesLoading, getCountriesData } = useGetCountry({
+    count: 10,
+    name: adultCountrySearched,
+    form: 'adultPassengerCountry',
+  })
 
   return (
     <form className="pb-3" onSubmit={handleSubmit(onConfirm)}>
@@ -263,12 +272,6 @@ const PassengerInformation = () => {
                     <div>
                       <div className="ml-4 flex items-center">
                         <div className="block">
-                          <label
-                            className={styles.passengerTitles}
-                            htmlFor="lastName"
-                          >
-                            Gender
-                          </label>
                           <span className="text-red-600 text-xs mt-1 ml-4">
                             {errors.adults?.[index]?.gender?.message}
                           </span>
@@ -399,18 +402,40 @@ const PassengerInformation = () => {
                           Nationality
                         </label>
                       </div>
-                      <input
-                        className={clsx(
-                          'w-10/12 rounded-lg border border-gray-400 py-1 px-3 outline-none',
-                          {
-                            'border border-red-600':
-                              errors.adults?.[index]?.nationality?.message,
-                          }
-                        )}
-                        type="text"
-                        id="Nationality"
-                        {...register(`adults.${index}.nationality` as const)}
-                      />
+                      <Box
+                        sx={{
+                          '.MuiOutlinedInput-root': {
+                            height: '32px',
+                            padding: '0',
+                            marginTop: '-2px',
+                          },
+                          '.MuiButtonBase-root': {
+                            marginTop: '2px',
+                          },
+                        }}
+                      >
+                        <SelectSearch
+                          loading={countriesLoading}
+                          className={clsx(
+                            'lg:w-10/12 w-full lg:h-8 rounded-lg border border-gray-400 outline-none mt-1',
+                            {
+                              'border border-red-600':
+                                errors.adults?.[index]?.nationality?.message,
+                            }
+                          )}
+                          control={control}
+                          name={`adults.${index}.nationality`}
+                          textSearched={adultCountrySearched}
+                          setTextSearched={setAdultCountrySearched}
+                          items={getCountriesData?.map(
+                            ({ title, countryCode }) => ({
+                              iataCode: countryCode,
+                              isCity: false,
+                              label: title,
+                            })
+                          )}
+                        />
+                      </Box>
                       <p className="text-red-600 text-xs mt-1">
                         {errors.adults?.[index]?.nationality?.message}
                       </p>
@@ -492,7 +517,7 @@ const PassengerInformation = () => {
                             render={({ field }) => (
                               <DatePicker
                                 {...field}
-                                minDate={todayDate}
+                                minDate={tomorrowDate}
                                 ref={datePickerRef}
                                 value={field.value}
                                 onChange={(value) => field.onChange(value)}
@@ -519,12 +544,6 @@ const PassengerInformation = () => {
                     </div>
                     <div className="flex items-center ml-5">
                       <div className="block">
-                        <label
-                          className={styles.passengerTitles}
-                          htmlFor="lastName"
-                        >
-                          Gender
-                        </label>
                         <span className="text-red-600 text-xs mt-1 ml-4">
                           {errors.children?.[index]?.gender?.message}
                         </span>
@@ -654,18 +673,40 @@ const PassengerInformation = () => {
                           Nationality
                         </label>
                       </div>
-                      <input
-                        className={clsx(
-                          'w-10/12 rounded-lg border border-gray-400 py-1 px-3 outline-none',
-                          {
-                            'border border-red-600':
-                              errors.children?.[index]?.nationality?.message,
-                          }
-                        )}
-                        type="text"
-                        id="Nationality"
-                        {...register(`children.${index}.nationality` as const)}
-                      />
+                      <Box
+                        sx={{
+                          '.MuiOutlinedInput-root': {
+                            height: '32px',
+                            padding: '0',
+                            marginTop: '-2px',
+                          },
+                          '.MuiButtonBase-root': {
+                            marginTop: '2px',
+                          },
+                        }}
+                      >
+                        <SelectSearch
+                          loading={countriesLoading}
+                          className={clsx(
+                            'lg:w-10/12 w-full lg:h-8 rounded-lg border border-gray-400 outline-none mt-1',
+                            {
+                              'border border-red-600':
+                                errors.children?.[index]?.nationality?.message,
+                            }
+                          )}
+                          control={control}
+                          name={`children.${index}.nationality`}
+                          textSearched={adultCountrySearched}
+                          setTextSearched={setAdultCountrySearched}
+                          items={getCountriesData?.map(
+                            ({ title, countryCode }) => ({
+                              iataCode: countryCode,
+                              isCity: false,
+                              label: title,
+                            })
+                          )}
+                        />
+                      </Box>
                       <p className="text-red-600 text-xs mt-1">
                         {errors.children?.[index]?.nationality?.message}
                       </p>
@@ -751,7 +792,7 @@ const PassengerInformation = () => {
                                 ref={datePickerRef}
                                 value={field.value}
                                 onChange={(value) => field.onChange(value)}
-                                minDate={todayDate}
+                                minDate={tomorrowDate}
                               />
                             )}
                           />
@@ -791,7 +832,6 @@ const PassengerInformation = () => {
                           }
                         )}
                         defaultCountry="TR"
-                        onCountryChange={(country) => console.log(country)}
                         {...field}
                       />
                       <span className="text-red-600 text-xs w-full text-center">
@@ -833,11 +873,24 @@ const PassengerInformation = () => {
           the passports of those travelling.
         </p>
         <div className="text-center pb-5">
-          <button className={styles.continueBtn} type="submit">
-            Continue
-          </button>
+          {postAddToCardLoading ? (
+            <CircularProgress />
+          ) : (
+            <button className={styles.continueBtn} type="submit">
+              Continue
+            </button>
+          )}
         </div>
       </div>
+      <Modal
+        open={modalIsOpen}
+        onClose={() => setModalIsOpen(false)}
+        className="flex"
+      >
+        <div className="m-auto bg-white rounded-lg p-6">
+          <SingInUser inModal setModalIsOpen={setModalIsOpen} />
+        </div>
+      </Modal>
     </form>
   )
 }

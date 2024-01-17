@@ -376,16 +376,6 @@ a {
   align-self: center;
 }
 
-.login-sing-up-btn {
-  background: #ffe5e5;
-  border-radius: 6px;
-  color: #ff0000;
-  border: none;
-  padding: 0 20px;
-  height: 36px;
-  cursor: pointer;
-  text-transform: none !important;
-}
 .MuiInput-underline:before,
 .MuiInput-underline:after {
   background-color: transparent !important;
@@ -572,6 +562,7 @@ a {
   outline: none !important;
   padding: 0 !important;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .rmdp-day.rmdp-range {
@@ -981,4 +972,16 @@ html[lang|='fa'] .parentButton:last-child {
 }
 .light-gray {
   color: #000000de;
+}
+
+.rmdp-toolbar {
+  justify-content: end !important;
+  padding-right: 12px !important;
+}
+.rmdp-toolbar > div:not(:last-child) {
+  display: none;
+}
+
+.rmdp-day.rmdp-today span {
+  background-color: #2790c3 !important;
 }

@@ -16,12 +16,8 @@ const StaysPage = () => {
   }
 
   function handleKeyDown(e) {
-    let runOnce = () =>
-      setTimeout(() => {
-        console.log('log')
-      }, 1000)
+    let runOnce = () => setTimeout(() => {}, 1000)
     runOnce()
-    console.log(e, 'e')
   }
 
   return (

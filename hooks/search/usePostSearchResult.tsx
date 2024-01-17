@@ -7,30 +7,40 @@ import {
   FrontDataSearchResultI,
   GetSearchResultResultI,
 } from '../../types/search'
+import { OpratorDetailI, setResultLoading } from '../../airportsSlice'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 export default function usePostSearchResult({
   onSuccess,
 }: {
-  onSuccess?: (newData: FrontDataSearchResultI) => void
+  onSuccess?: (
+    newData: FrontDataSearchResultI,
+    opratorDetails: OpratorDetailI[]
+  ) => void
 }) {
+  const dispatch = useDispatch()
   const { mutate, isLoading, data, isError, status } = useMutation(
     postSearchResult,
     {
-      onSuccess: () => {
+      onSuccess: (newData) => {
         if (onSuccess)
-          onSuccess(convertApiToFrontData(data as GetSearchResultResultI))
-      },
-      onError(err) {
-        const error = err as AxiosError
-        toast.error(error.message)
+          onSuccess(
+            convertApiToFrontData(newData as GetSearchResultResultI),
+            newData.searchResult.opratorDetails
+          )
       },
     }
   )
+
+  // useEffect(() => {
+  //   dispatch(setResultLoading(isLoading))
+  // }, [isLoading])
 
   return {
     postSearchResultAction: mutate,
     postSearchResultLoading: isLoading,
     searchResultData: convertApiToFrontData(data as GetSearchResultResultI),
-    searchResultIsError: isError,
+    searchResultStatus: status,
   }
 }
