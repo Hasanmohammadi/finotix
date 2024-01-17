@@ -109,7 +109,7 @@ function MyApp({ Component, pageProps }) {
             }
           >
             <Head>
-              <link rel="manifest" href="/manifest.json" />
+              <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
               <meta charSet="UTF-8" />
               <meta
                 name="viewport"
