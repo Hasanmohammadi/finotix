@@ -153,7 +153,7 @@ export default function CollapseItem({
                       </div>
                     </div>
                     {!!leg?.stopTimeToNextLegMinute && (
-                      <div className="px-4 py-1 my-2 border-t border-t-gray-400  border-b border-b-gray-400 bg-gray-100 w-full rounded-md ">
+                      <div className=" py-1 my-2 border-t border-t-gray-400 text-center ml-14 w-28  border-b border-b-gray-400 bg-gray-100  rounded-md ">
                         <p className="font-medium text-xs">
                           Stop: {leg?.stopTimeToNextLegText}
                         </p>
@@ -247,7 +247,7 @@ export default function CollapseItem({
                       </div>
 
                       {!!leg?.stopTimeToNextLegMinute && (
-                        <div className="px-4 py-1 my-2 border-t border-t-gray-400  border-b border-b-gray-400 bg-gray-100 w-full rounded-md ">
+                        <div className="px-4 py-1 my-2 border-t border-t-gray-400  border-b border-b-gray-400 bg-gray-100 text-center ml-14 w-28 rounded-md ">
                           <p className="font-medium text-xs">
                             Stop: {leg?.stopTimeToNextLegText}
                           </p>

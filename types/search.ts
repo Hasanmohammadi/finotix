@@ -441,60 +441,6 @@ export interface PassengerI {
   parentIndex: number
 }
 
-export interface AddToCartResultI {
-  invoiceCode: string
-  fullPaymentAmount: number
-  currencyCode: string
-  addToCartDetail: AddToCartDetail[]
-  warning: Warning[]
-  paymentType: number
-  notEnoughtCredit: boolean
-}
-
-export interface AddToCartDetail {
-  priceDetailID: string
-  fullTotalAmount: number
-  currencyCode: string
-  priceChanged: boolean
-  flightReserveDetail: FlightReserveDetail
-  invoiceReserveDetail: InvoiceReserveDetail
-  invoiceContactList: InvoiceContactList
-  warning: Warning
-  finalServicePrice: number
-  orginalPrices: OrginalPrice[]
-}
-
-export interface FlightReserveDetail {
-  mainPNR: string
-  reservedItem: boolean
-  maxReserveDate: string
-}
-
-export interface InvoiceContactList {
-  contactOwnerTypeID: number
-  address: string
-  emailAddress: string
-  cellphoneNumber: string
-  phoneNumber: string
-}
-
-export interface InvoiceReserveDetail {
-  finalReserveOject: string
-  providerID: number
-}
-
-export interface OrginalPrice {
-  passengerType: number
-  passengerIndex: number
-  travelerCode: string
-  orginalAmount: number
-}
-
-export interface Warning {
-  warningCode: string
-  warningMessage: string
-}
-
 export interface PaymentResultI {
   invoiceCode: string
   paymentedAmount: number
@@ -523,4 +469,71 @@ export interface ErrorExceptionI {
 export interface ModelStateErrorI {
   paramName: string
   paramErrors: string[]
+}
+
+export interface AddToCartResultI {
+  invoiceCode: string
+  fullPaymentAmount: number
+  currencyCode: string
+  addToCartDetail: AddToCartDetail[]
+  warning: Warning[]
+  paymentType: number
+  notEnoughtCredit: boolean
+  paymentGateways: PaymentGateway[]
+}
+
+export interface PaymentGateway {
+  agencyBankId: number
+  title: string
+  agencyId: number
+  bankId: number
+  countryId: number
+  shareTerminal: boolean
+  internationalTerminal: boolean
+  active: boolean
+  currencyCode: string
+}
+
+export interface AddToCartDetail {
+  priceDetailID: string
+  fullTotalAmount: number
+  currencyCode: string
+  priceChanged: boolean
+  flightReserveDetail: FlightReserveDetail
+  invoiceReserveDetail: InvoiceReserveDetail
+  invoiceContactList: InvoiceContactList
+  warning: Warning
+  finalServicePrice: number
+  orginalPrices: OrginalPrice[]
+}
+
+export interface OrginalPrice {
+  passengerType: number
+  passengerIndex: number
+  travelerCode: string
+  orginalAmount: number
+}
+
+export interface Warning {
+  warningCode: string
+  warningMessage: string
+}
+
+export interface InvoiceContactList {
+  contactOwnerTypeID: number
+  address: string
+  emailAddress: string
+  cellphoneNumber: string
+  phoneNumber: string
+}
+
+export interface InvoiceReserveDetail {
+  finalReserveOject: string
+  providerID: number
+}
+
+interface FlightReserveDetail {
+  mainPNR: string
+  reservedItem: boolean
+  maxReserveDate: string
 }

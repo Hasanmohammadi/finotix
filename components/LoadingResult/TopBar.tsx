@@ -1,8 +1,9 @@
-import { ArrowDropDown, Check, SortOutlined } from '@mui/icons-material'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import { useRouter } from 'next/router'
+import { ArrowDownward } from '@mui/icons-material'
+import clsx from 'clsx'
 import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { setFilter } from '../../airportsSlice'
+import { useAppSelector } from '../../hooks'
 import styles from './loadingResult.module.css'
 
 const otherFilters = [
@@ -15,14 +16,11 @@ const otherFilters = [
 ]
 
 const TopBar = () => {
-  const router = useRouter()
-  const changeParams = (queryParam: string) => {
-    router.query.sort = queryParam
-    router.push(router)
-  }
+  const { filter, lang } = useAppSelector((state) => state.airportsInfo)
+  const dispatch = useDispatch()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const [activeFilter, setActiveFilter] = React.useState('')
+  // const [activeFilter, setActiveFilter] = React.useState('')
 
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,43 +31,101 @@ const TopBar = () => {
   }
 
   useEffect(() => {
-    if (router.query.sort !== activeFilter) {
-      setActiveFilter('')
-      otherFilters.forEach((filter) => {
-        if (router.query.sort === filter) {
-          setActiveFilter(filter)
-        }
-      })
+    dispatch(setFilter({ name: '', orderByDesc: false }))
+  }, [])
+
+  const onFilterClick = (value: string) => {
+    if (filter.name === value && !filter.orderByDesc) {
+      dispatch(setFilter({ name: value, orderByDesc: true }))
+    } else if (filter.name === value && filter.orderByDesc) {
+      dispatch(setFilter({ name: '', orderByDesc: false }))
+    } else {
+      dispatch(setFilter({ name: value, orderByDesc: false }))
     }
-  }, [router.query.sort])
+  }
 
   return (
     <div className={`grid grid-cols-4 ${styles.navParent}`}>
       <div
-        className={`parentButton ${
-          router.query.sort === 'best' && styles.active
-        }`}
-        onClick={() => changeParams('best')}
+        className={clsx('parentButton', {
+          [styles.active]: filter.name === 'OneAdultTotalFare',
+        })}
+        onClick={() => onFilterClick('OneAdultTotalFare')}
       >
-        <button className={styles.btnStyles}>Best</button>
+        <button className={styles.btnStyles}>
+          {filter.name === 'OneAdultTotalFare' && (
+            <div
+              className={clsx({
+                'rotate-180':
+                  filter.name === 'OneAdultTotalFare' && filter.orderByDesc,
+              })}
+            >
+              <ArrowDownward fontSize="small" />
+            </div>
+          )}
+          Price
+        </button>
       </div>
       <div
-        className={`parentButton ${
-          router.query.sort === 'cheapest' && styles.active
-        }`}
-        onClick={() => changeParams('cheapest')}
+        className={clsx('parentButton', {
+          [styles.active]: filter.name === 'DepartureTimes',
+        })}
+        onClick={() => onFilterClick('DepartureTimes')}
       >
-        <button className={`${styles.btnStyles}`}>Cheapest</button>
+        <button className={styles.btnStyles}>
+          {filter.name === 'DepartureTimes' && (
+            <div
+              className={clsx({
+                'rotate-180':
+                  filter.name === 'DepartureTimes' && filter.orderByDesc,
+              })}
+            >
+              <ArrowDownward fontSize="small" />
+            </div>
+          )}
+          Departure time
+        </button>
       </div>
       <div
-        className={`parentButton ${
-          router.query.sort === 'quickest' && styles.active
-        }`}
-        onClick={() => changeParams('quickest')}
+        className={clsx('parentButton', {
+          [styles.active]: filter.name === 'TotalFlightDuration',
+        })}
+        onClick={() => onFilterClick('TotalFlightDuration')}
       >
-        <button className={styles.btnStyles}>Quickest</button>
+        <button className={styles.btnStyles}>
+          {filter.name === 'TotalFlightDuration' && (
+            <div
+              className={clsx({
+                'rotate-180':
+                  filter.name === 'TotalFlightDuration' && filter.orderByDesc,
+              })}
+            >
+              <ArrowDownward fontSize="small" />
+            </div>
+          )}
+          Flight duration
+        </button>
       </div>
       <div
+        className={clsx('parentButton', {
+          [styles.active]: filter.name === 'stops',
+        })}
+        onClick={() => onFilterClick('stops')}
+      >
+        <button className={styles.btnStyles}>
+          {filter.name === 'stops' && (
+            <div
+              className={clsx({
+                'rotate-180': filter.name === 'stops' && filter.orderByDesc,
+              })}
+            >
+              <ArrowDownward fontSize="small" />
+            </div>
+          )}
+          {lang.stops}
+        </button>
+      </div>
+      {/* <div
         className={`parentButton flex justify-center ${
           router.query.sort === activeFilter && styles.active
         }`}
@@ -111,7 +167,7 @@ const TopBar = () => {
                   setActiveFilter('')
                   router.replace('/result', undefined, { shallow: true })
                 } else {
-                  changeParams(filter)
+                  onFilterClick(filter)
                   setActiveFilter(filter)
                 }
               }}
@@ -123,7 +179,7 @@ const TopBar = () => {
             </MenuItem>
           ))}
         </Menu>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -2,6 +2,8 @@ import Slider from '@material-ui/core/Slider'
 import { useRouter } from 'next/router'
 import { useState, useEffect, ChangeEvent } from 'react'
 import { useAppSelector } from '../../hooks'
+import { useDispatch } from 'react-redux'
+import { setPriceFilter } from '../../airportsSlice'
 
 interface PriceFilterPropsI {
   currency?: string
@@ -17,31 +19,26 @@ export default function PriceFilter({
   className,
   currency,
 }: PriceFilterPropsI) {
-  const router = useRouter()
-  const { totalFareAmounts } = useAppSelector((state) => state.airportsInfo)
-  // const [value, setValue] = useState<string[]>([
-  //   totalFareAmounts[0]?.toString(),
-  //   totalFareAmounts[1]?.toString(),
-  // ])
-
-  // const rangeSelector = (event: any, newValue: any) => {
-  //   router.query.price = newValue
-  //   router.push(router)
-  //   setValue(newValue)
-  // }
-  // useEffect(() => {
-  //   setValue(router.query.price as string[])
-  // }, [router.query.price?.[0]])
-
-  const [value, setValue] = useState<number[]>(totalFareAmounts)
+  const dispatch = useDispatch()
+  const { totalFareAmounts, priceFilter, resultLoading } = useAppSelector(
+    (state) => state.airportsInfo
+  )
+  const [value, setValue] = useState<number[]>([...totalFareAmounts])
 
   const handleChange = (_: ChangeEvent<{}>, newValue: number | number[]) => {
-    setValue(newValue as number[])
+    setValue([...(newValue as number[])])
+    // setTimeout(() => {
+    dispatch(setPriceFilter([...(newValue as number[])]))
+    // }, 500)
   }
 
   useEffect(() => {
-    setValue(totalFareAmounts)
-  }, [totalFareAmounts])
+    if (priceFilter?.[0]) {
+      setValue([...priceFilter])
+    } else {
+      setValue([...totalFareAmounts])
+    }
+  }, [totalFareAmounts, priceFilter])
 
   return (
     <div className={className}>
@@ -49,10 +46,11 @@ export default function PriceFilter({
         getAriaLabel={() => 'Temperature range'}
         value={value}
         onChange={handleChange}
-        valueLabelDisplay="auto"
+        valueLabelDisplay="off"
         min={totalFareAmounts?.[0]}
         max={totalFareAmounts?.[1]}
         getAriaValueText={valuetext}
+        disabled={resultLoading}
       />
       <div className="flex justify-between">
         <span className="text-sm font-medium">

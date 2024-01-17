@@ -162,13 +162,20 @@ export default function TicketCardMobile({
       </div>
       {!returnFlight?.legs?.[0] && (
         <div className="flex justify-between px-4 py-3 border-t-gray-100 border-t mt-1 border-dashed">
-          <span className="font-medium text-gray-500"></span>
-          <div className="flex gap-2 items-center">
-            <p>{currencyCode}</p>
-            <p className="font-bold text-lg">
-              {oneAdultTotalFare?.toLocaleString()}
-            </p>
-          </div>
+          <>
+            <button className="bg-[#ff0000] px-6 py-0.5 rounded-lg text-white">
+              Select
+            </button>
+          </>
+          <>
+            <span className="font-medium text-gray-500"></span>
+            <div className="flex gap-2 items-center">
+              <p>{currencyCode}</p>
+              <p className="font-bold text-lg">
+                {oneAdultTotalFare?.toLocaleString()}
+              </p>
+            </div>
+          </>
         </div>
       )}
 
@@ -226,13 +233,20 @@ export default function TicketCardMobile({
             </div>
           </div>
           <div className="flex justify-between px-4 py-3 border-t-gray-100 border-t mt-1 border-dashed">
-            <span className="font-medium text-gray-500"></span>
-            <div className="flex gap-2 items-center">
-              <p>{currencyCode}</p>
-              <p className="font-bold text-lg">
-                {oneAdultTotalFare?.toLocaleString()}
-              </p>
-            </div>
+            <>
+              <button className="bg-[#ff0000] px-6 py-0.5 rounded-lg text-white">
+                Select
+              </button>
+            </>
+            <>
+              <span className="font-medium text-gray-500"></span>
+              <div className="flex gap-2 items-center">
+                <p>{currencyCode}</p>
+                <p className="font-bold text-lg">
+                  {oneAdultTotalFare?.toLocaleString()}
+                </p>
+              </div>
+            </>
           </div>
         </>
       )}

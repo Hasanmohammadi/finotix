@@ -2,16 +2,15 @@ import { useTranslation } from 'next-i18next'
 import Link from 'next/link'
 
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { UseMutateFunction } from 'react-query'
+import { CreateSearchArgsI } from '../../services/search/postCreateSearch'
+import { PlacesI } from '../../types/basicInformation'
+import { PostCreateSearchResultI } from '../../types/search'
 import '../DatesConvert/DateConverterToJalali'
 import '../DatesConvert/JalaliDateConverterToGeorgian'
 import '../DatesConvert/toEnglishDigits'
 import FlightSearch from './FlightSearch'
-import { usePostCreateSearch } from '../../hooks/search'
-import { useRouter } from 'next/router'
-import { PlacesI } from '../../types/basicInformation'
-import { UseMutateFunction } from 'react-query'
-import { PostCreateSearchResultI } from '../../types/search'
-import { CreateSearchArgsI } from '../../services/search/postCreateSearch'
 
 interface MainPageProps {
   defaultOriginValue?: PlacesI
@@ -22,14 +21,12 @@ interface MainPageProps {
     CreateSearchArgsI,
     unknown
   >
-  postCreateSearchLoading: boolean
   onSearchClick?: () => void
   isStickyPosition?: boolean
 }
 
 const MainPage = ({
   postCreateSearchAction,
-  postCreateSearchLoading,
   onSearchClick,
   isStickyPosition,
 }: MainPageProps) => {
@@ -62,17 +59,14 @@ const MainPage = ({
                     </a>
                   </Link>
                 </button>
-                <button className="pick-ticket">
+                {/* <button className="pick-ticket">
                   <Link href="/stays">
                     <a>{t('stays')}</a>
                   </Link>
-                </button>
+                </button> */}
                 <hr />
               </div>
-              <FlightSearch
-                postCreateSearchAction={postCreateSearchAction}
-                postCreateSearchLoading={postCreateSearchLoading}
-              />
+              <FlightSearch postCreateSearchAction={postCreateSearchAction} />
             </div>
           </div>
         </div>

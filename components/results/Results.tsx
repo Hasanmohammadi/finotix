@@ -2,11 +2,12 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 
+import clsx from 'clsx'
+import { UseMutateFunction } from 'react-query'
 import { useDispatch } from 'react-redux'
-import { setCurrencyCode, setTotalFareAmounts } from '../../airportsSlice'
+import { setCurrencyCode } from '../../airportsSlice'
 import { useAppSelector } from '../../hooks'
 import { usePostCreateSearch } from '../../hooks/search'
-import usePostSearchResult from '../../hooks/search/usePostSearchResult'
 import {
   FrontDataSearchResultI,
   GetSearchResultResultI,
@@ -14,12 +15,13 @@ import {
 import TopBar from '../LoadingResult/TopBar'
 import FlightSearch from '../flights/FlightSearch'
 import Header from '../header/Header'
-import FilterBox from './Filter'
+import AirlineFilterBox from './AirlineFilterBox'
+import EmptyState from './EmptyState'
 import PriceFilter from './PriceFilter'
+import StopFilterBox from './StopFilterBox'
+import TicketCardLoading from './TicketCardLoading'
 import TicketsResult from './TicketsResult'
-import { UseMutateFunction } from 'react-query'
-import { CircularProgress, Skeleton } from '@mui/material'
-import clsx from 'clsx'
+import ExpireTimeResult from './ExpireTimeResult'
 
 interface ResultPropsI {
   searchResultData: FrontDataSearchResultI
@@ -30,28 +32,35 @@ interface ResultPropsI {
     unknown
   >
   data: FrontDataSearchResultI
-  postSearchResultLoading: boolean
   remainingData: number
   setData: Dispatch<SetStateAction<FrontDataSearchResultI>>
   setPageNumber: Dispatch<SetStateAction<number>>
+  searchResultStatus: 'error' | 'idle' | 'loading' | 'success'
 }
 
 export default function Results({
   searchResultData,
   postSearchResultAction,
   data,
-  postSearchResultLoading,
   setData,
   setPageNumber,
   remainingData,
+  searchResultStatus,
 }: ResultPropsI) {
-  const [small, setSmall] = useState(false)
-
   const { t } = useTranslation('result')
+  const [small, setSmall] = useState(false)
+  const [searchIdExpire, setSearchIdExpire] = useState(false)
 
-  const { currencyCode } = useAppSelector((state) => state.airportsInfo)
+  const {
+    currencyCode,
+    airlineSelectedFilter,
+    departureStops,
+    arrivalStops,
+    filter,
+    resultLoading,
+  } = useAppSelector((state) => state.airportsInfo)
 
-  const { pathname, push, query } = useRouter()
+  const { pathname, push } = useRouter()
 
   const dispatch = useDispatch()
 
@@ -59,31 +68,26 @@ export default function Results({
     dispatch(setCurrencyCode(data?.flightGroups?.[0]?.currencyCode))
   }, [data?.flightGroups?.[0]?.currencyCode])
 
-  const filterOptions = [
-    { label: 'Non-stop', value: 'non-stop' },
-    { label: 'One Stop', value: 'one-stop' },
-    { label: 'Two Stops', value: 'two-stops' },
-  ]
-  const airLineOptions = [
-    { label: 'Pegasus', value: 'pegasus' },
-    { label: 'Air France', value: 'airFrance' },
-    { label: 'Air Serbia', value: 'airSerbia' },
-  ]
-
-  const handleFilterChange = (selectedOptions: string[]) => {}
-
-  const { postCreateSearchAction, postCreateSearchLoading } =
-    usePostCreateSearch({
-      onSuccess: (searchId) => {
-        postSearchResultAction({
-          page: 1,
-          pageSize: 5,
-          searchId,
-        })
-        localStorage.setItem('searchId', searchId)
-        pathname !== '/result' && push('result')
-      },
-    })
+  const { postCreateSearchAction } = usePostCreateSearch({
+    onSuccess: (searchId) => {
+      postSearchResultAction({
+        page: 1,
+        pageSize: 5,
+        searchId,
+        departureStops,
+        arrivalStops,
+        airlines: airlineSelectedFilter,
+        orderBy: filter.name,
+        orderByDesc: filter.orderByDesc,
+      })
+      localStorage.setItem('searchId', searchId)
+      localStorage.setItem(
+        'finotixSearchIdTime',
+        JSON.stringify(new Date().getTime())
+      )
+      pathname !== '/result' && push('result')
+    },
+  })
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -91,8 +95,34 @@ export default function Results({
     }
   }, [])
 
+  const checkExpiration = () => {
+    const savedData = localStorage.getItem('finotixSearchIdTime')
+    if (savedData) {
+      const timestamp = JSON.parse(savedData)
+
+      const currentTime = new Date().getTime()
+      const elapsedMinutes = (currentTime - timestamp) / (1000 * 60)
+
+      if (elapsedMinutes >= 9) {
+        setSearchIdExpire(true)
+        localStorage.removeItem('finotixSearchIdTime')
+      }
+    }
+  }
+
+  useEffect(() => {
+    const expirationInterval = setInterval(() => {
+      checkExpiration()
+    }, 60 * 100)
+
+    return () => clearInterval(expirationInterval)
+  }, [])
+
   return (
     <>
+      {searchIdExpire && (
+        <ExpireTimeResult setSearchIdExpire={setSearchIdExpire} />
+      )}
       <Header />
       <div className="absolute w-full ">
         <div
@@ -103,7 +133,6 @@ export default function Results({
         >
           <FlightSearch
             postCreateSearchAction={postCreateSearchAction}
-            postCreateSearchLoading={postCreateSearchLoading}
             isStickyPosition={small}
             onSearchClick={() => {
               setPageNumber(0)
@@ -130,74 +159,76 @@ export default function Results({
                     Filter by <span className="font-bold text-base">Price</span>
                   </p>
                 </div>
-                <div className="px-6 pt-4 rounded-lg">
+                <div className=" pt-4 rounded-lg px-6">
                   <PriceFilter currency={currencyCode} />
                 </div>
               </div>
-              <div className="bg-white pb-8 rounded-lg mt-3">
+              <div className="bg-white pb-4 rounded-lg mt-3">
                 <div className="border-b-2 py-3.5 border-b-gray-300 px-5">
                   <p>
                     Filter by <span className="font-bold text-base">Stop</span>
                   </p>
                 </div>
-                <div className="px-6 pt-4 rounded-lg">
-                  <FilterBox
-                    options={filterOptions}
-                    onFilterChange={handleFilterChange}
-                    filterName="stops"
-                  />
+                <div className=" pt-4 rounded-lg">
+                  <StopFilterBox />
                 </div>
               </div>
-              <div className="bg-white pb-8 rounded-lg mt-3">
+              <div className="bg-white pb-0 rounded-lg mt-3">
                 <div className="border-b-2 py-3.5 border-b-gray-300 px-5">
                   <p>
                     Filter by{' '}
                     <span className="font-bold text-base">Airline</span>
                   </p>
                 </div>
-                <div className="px-6 pt-4 rounded-lg">
-                  <FilterBox
-                    options={airLineOptions}
-                    onFilterChange={handleFilterChange}
-                    filterName="airline"
-                  />
+                <div className="pl-6 pt-4 rounded-lg h-60 overflow-auto">
+                  <AirlineFilterBox />
                 </div>
               </div>
             </div>
 
             <div className="w-4/5">
               <TopBar />
-              {data?.flightGroups?.map((flightGroup) => (
+              {!resultLoading &&
+                data?.flightGroups?.map((flightGroup) => (
+                  <>
+                    <TicketsResult
+                      departureFlight={flightGroup?.flights?.[0]}
+                      currencyCode={flightGroup?.currencyCode}
+                      returnFlight={flightGroup?.flights?.[1]}
+                      groupFares={flightGroup?.groupFares}
+                      groupId={flightGroup?.groupId}
+                      id={flightGroup?.id}
+                      passengersCount={{
+                        adult: searchResultData.travelerAvailAdultCount,
+                        child: searchResultData.travelerAvailChildCount,
+                        infant: searchResultData.travelerAvailInfantCount,
+                      }}
+                      oneAdultTotalFare={flightGroup?.oneAdultTotalFare}
+                      totalFareAmount={flightGroup?.totalFareAmount}
+                    />
+                  </>
+                ))}
+
+              {resultLoading ? (
                 <>
-                  <TicketsResult
-                    departureFlight={flightGroup?.flights?.[0]}
-                    currencyCode={flightGroup?.currencyCode}
-                    returnFlight={flightGroup?.flights?.[1]}
-                    groupFares={flightGroup?.groupFares}
-                    groupId={flightGroup?.groupId}
-                    id={flightGroup?.id}
-                    passengersCount={{
-                      adult: searchResultData.travelerAvailAdultCount,
-                      child: searchResultData.travelerAvailChildCount,
-                      infant: searchResultData.travelerAvailInfantCount,
-                    }}
-                    oneAdultTotalFare={flightGroup?.oneAdultTotalFare}
-                    totalFareAmount={flightGroup?.totalFareAmount}
-                  />
+                  <TicketCardLoading />
+                  <TicketCardLoading />
+                  <TicketCardLoading />
+                  <TicketCardLoading />
                 </>
-              ))}
-              {postSearchResultLoading && (
-                <div className="flex justify-center mt-10 mb-5 ">
-                  <CircularProgress />
-                </div>
+              ) : searchResultStatus === 'error' ? (
+                <EmptyState />
+              ) : (
+                <>
+                  {!!(remainingData <= 0) &&
+                    !resultLoading &&
+                    !!data?.flightGroups?.length && (
+                      <div className="flex justify-center mt-10">
+                        <p>No more result found !</p>
+                      </div>
+                    )}
+                </>
               )}
-              {!!(remainingData <= 0) &&
-                !postSearchResultLoading &&
-                !!data?.flightGroups?.length && (
-                  <div className="flex justify-center mt-10">
-                    <p>No more result found !</p>
-                  </div>
-                )}
             </div>
           </div>
         </div>

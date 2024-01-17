@@ -15,17 +15,12 @@ const StaysTicket = () => {
   const { t } = useTranslation('stays')
 
   function handleKeyDown(e) {
-    let runOnce = () =>
-      setTimeout(() => {
-        console.log('log')
-      }, 1000)
+    let runOnce = () => setTimeout(() => {}, 1000)
     runOnce()
-    console.log(e, 'e')
   }
 
   const handleLocaleChange = (event) => {
     const value = event.target.value
-    console.log(value, 'val')
   }
   // TODO: change data with api call data
   // TODO: fix multi lang for this page

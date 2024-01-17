@@ -1,23 +1,38 @@
-import styles from './payment.module.css'
-import RadioGroup from '@mui/material/RadioGroup'
+import CreditCardIcon from '@mui/icons-material/CreditCard'
+import FormControl from '@mui/material/FormControl'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio'
-import FormControl from '@mui/material/FormControl'
-import { SetStateAction, useState, useEffect } from 'react'
-import { isMobile as isMobileSize } from 'react-device-detect'
-import CreditCardIcon from '@mui/icons-material/CreditCard'
-import paypal from '../../styles/images/paypal.png'
-import Image from 'next/image'
+import RadioGroup from '@mui/material/RadioGroup'
 import clsx from 'clsx'
-import { PayWithCardI } from './Payment'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { isMobile as isMobileSize } from 'react-device-detect'
 import { UseFormRegister } from 'react-hook-form'
+import useGetBank from '../../hooks/bank/useGetBank'
+import { PayWithCardI } from './Payment'
+import styles from './payment.module.css'
 
 const PaymentMethods = ({
   register,
+  bankInfo,
+  setBankInfo,
 }: {
   register: UseFormRegister<PayWithCardI>
+  bankInfo:
+    | {
+        bankId: number
+        internationalTerminal: boolean
+      }
+    | undefined
+  setBankInfo: Dispatch<
+    SetStateAction<
+      | {
+          bankId: number
+          internationalTerminal: boolean
+        }
+      | undefined
+    >
+  >
 }) => {
-  const [paymentMethod, setPaymentMethod] = useState('paypal')
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -27,13 +42,18 @@ const PaymentMethods = ({
   const handleSelect = (event: {
     target: { value: SetStateAction<string> }
   }) => {
-    setPaymentMethod(event.target.value)
+    setBankInfo((pre) => ({
+      internationalTerminal: pre?.internationalTerminal as boolean,
+      bankId: +event.target.value as number,
+    }))
   }
+
+  const { getBankData } = useGetBank()
 
   return (
     <div
       className={clsx('bg-white rounded-lg py-3 px-4 ', {
-        'flex justify-between': !isMobile,
+        'flex justify-between gap-8': !isMobile,
         block: isMobile,
       })}
     >
@@ -43,130 +63,101 @@ const PaymentMethods = ({
           <RadioGroup
             aria-labelledby="demo-row-radio-buttons-group-label"
             name="row-radio-buttons-group"
-            value={paymentMethod}
+            value={bankInfo?.bankId}
             onChange={handleSelect}
           >
-            <div
-              className={clsx(
-                'flex justify-between mt-5  border border-gray-400  rounded-lg px-4 ',
-                { 'border-red-500': paymentMethod !== 'paypal' }
-              )}
-            >
-              <FormControlLabel
-                value="Credit"
-                control={
-                  <Radio
-                    sx={{
-                      color: '#a4a4a4',
-                      '&.Mui-checked': {
-                        color: '#FF6B6B',
-                      },
-                    }}
-                  />
-                }
-                label="Credit or debit card"
-              />
-              <div className="self-center">
-                <CreditCardIcon className={styles.cardStyle} />
-              </div>
-            </div>
-            <div
-              className={clsx(
-                'flex justify-between mt-5  border border-gray-400  rounded-lg px-4 ',
-                { 'border-red-500': paymentMethod === 'paypal' }
-              )}
-            >
-              <FormControlLabel
-                value="paypal"
-                control={
-                  <Radio
-                    sx={{
-                      color: '#a4a4a4',
-                      '&.Mui-checked': {
-                        color: '#FF6B6B',
-                      },
-                    }}
-                  />
-                }
-                label="Paypal"
-              />
-              <div className="self-center mt-1.5">
-                <Image src={paypal} alt="" />
-              </div>
-            </div>
+            {getBankData?.map(
+              ({ active, title, agencyBankId, internationalTerminal }) =>
+                internationalTerminal && (
+                  <div
+                    className={clsx(
+                      'flex justify-between mt-5  border border-gray-400  rounded-lg px-4 ',
+                      { 'border-red-500': agencyBankId === bankInfo?.bankId },
+                      { 'h-10': !isMobile }
+                    )}
+                  >
+                    <FormControlLabel
+                      value={agencyBankId}
+                      control={
+                        <Radio
+                          sx={{
+                            color: '#a4a4a4',
+                            '&.Mui-checked': {
+                              color: '#FF6B6B',
+                            },
+                          }}
+                          disabled={!active}
+                        />
+                      }
+                      label={<span>{title}</span>}
+                      className="flex gap-2"
+                    />
+                    <div className="self-center">
+                      <CreditCardIcon className={styles.cardStyle} />
+                    </div>
+                  </div>
+                )
+            )}
           </RadioGroup>
         </FormControl>
       </div>
 
       <div
-        className={clsx('mt-4', {
-          'opacity-40': paymentMethod !== 'Credit',
-          hidden: paymentMethod !== 'Credit' && isMobile,
+        className={clsx({
+          'grid grid-cols-3 gap-3': !isMobile,
+          'grid mt-2': isMobile,
         })}
       >
-        <div
-          className={clsx({
-            'flex justify-between gap-3': !isMobile,
-          })}
-        >
-          <div
-            className={clsx({
-              'w-1/2': !isMobile,
-            })}
-          >
-            <label className="block text-sm" htmlFor="card-number">
-              Card Number
-            </label>
-            <input
-              className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
-              disabled={paymentMethod !== 'Credit'}
-              type="number"
-              {...register('cardNumber')}
-            />
-          </div>
-          <div
-            className={clsx({
-              'w-1/2': !isMobile,
-              'mt-2': isMobile,
-            })}
-          >
-            <label
-              className="block text-sm"
-              htmlFor="card-card-holder-last-name"
-            >
-              Cardholder's Name
-            </label>
-            <input
-              className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
-              disabled={paymentMethod !== 'Credit'}
-              type="text"
-              {...register('cardholderName')}
-            />
-          </div>
+        <div>
+          <label className="block text-sm" htmlFor="card-number">
+            Card Holder Name
+          </label>
+          <input
+            className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
+            type="text"
+            {...register('CardHolderName')}
+          />
         </div>
-        <div className="flex justify-between gap-3 mt-2">
-          <div className="w-1/2">
-            <label className="block text-sm" htmlFor="card-expiration-date">
-              Expiration Date
-            </label>
-            <input
-              className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
-              disabled={paymentMethod !== 'Credit'}
-              type="date"
-              {...register('expirationDate')}
-            />
-          </div>
-          <div className="w-1/2">
-            <label className="block text-sm" htmlFor="card-cvv-code">
-              CVV Code
-            </label>
-            <input
-              className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
-              disabled={paymentMethod !== 'Credit'}
-              type="number"
-              {...register('cvvCode')}
-            />
-          </div>
+        <div>
+          <label className="block text-sm" htmlFor="card-card-holder-last-name">
+            Card Number
+          </label>
+          <input
+            className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
+            type="number"
+            {...register('CardNumber')}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm" htmlFor="card-expiration-date">
+            CVV Number
+          </label>
+          <input
+            type="number"
+            className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
+            {...register('CVVNumber')}
+          />
+        </div>
+        <div>
+          <label className="block text-sm" htmlFor="card-cvv-code">
+            Expire Year
+          </label>
+          <input
+            className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
+            type="number"
+            {...register('ExpireYear')}
+          />
+        </div>
+        <div>
+          <label className="block text-sm" htmlFor="card-cvv-code">
+            Expire Month
+          </label>
+          <input
+            className="w-full border-gray-300 border rounded-md px-3 py-1 mt-2 bg-white outline-none"
+            type="number"
+            {...register('ExpireMonth')}
+          />
         </div>
       </div>
     </div>
